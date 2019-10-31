@@ -9,13 +9,13 @@ import {
   Content,
   Icon
 } from "native-base";
-const routes = ["Home", "Chat", "Profile"];
+const routes = ["HomePage", "UpdatePage"];
 export default class SideBar extends React.Component {
   render() {
     return (
       <Container>
         <Content>
-          <Image
+          {/* <Image
             source={{
               uri:
                 "https://raw.githubusercontent.com/GeekyAnts/NativeBase-KitchenSink/master/assets/drawer-cover.png"
@@ -26,8 +26,8 @@ export default class SideBar extends React.Component {
               alignSelf: "stretch",
               position: "absolute"
             }}
-          />
-          <Image
+          /> */}
+          {/* <Image
             square
             style={{
               height: 80,
@@ -40,7 +40,7 @@ export default class SideBar extends React.Component {
               uri:
                 "https://raw.githubusercontent.com/GeekyAnts/NativeBase-KitchenSink/master/assets/logo.png"
             }}
-          />
+          /> */}
           <List
             dataArray={routes}
             contentContainerStyle={{ marginTop: 120 }}

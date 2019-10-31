@@ -30,7 +30,7 @@ this.data = {
   org: "UIUC CS",
   password: "asdfg"};
 
-export default class Signon extends Component {
+export default class Update extends Component {
   
     constructor(props) {
       super(props);
@@ -38,8 +38,7 @@ export default class Signon extends Component {
         selected2: undefined
       };
     }
-
-
+ 
     onValueChange2(value: string) {
       this.setState({
         selected2: value
@@ -72,6 +71,22 @@ export default class Signon extends Component {
   render() {
     return (
       <Container style={styles.container}>
+
+        <Header>
+          <Left>
+            <Button
+              transparent
+              onPress={() => this.props.navigation.navigate("Home")}
+            >
+              <Icon name="arrow-back" />
+            </Button>
+          </Left>
+          <Body>
+            <Title>Update Profile</Title>
+          </Body>
+          <Right/>
+        </Header>
+
         <View>
           <Form>
             <Item floatingLabel>
@@ -119,7 +134,7 @@ export default class Signon extends Component {
         <View style={{alignItems: 'center',justifyContent: 'center', marginTop: 50}}>
           <Button block style={styles.button}
           onPress={this.postRegister}>
-            <Text>Sign On</Text>
+            <Text>Update Profile</Text>
           </Button>
         </View> 
       </Container>

@@ -77,6 +77,22 @@ export default class Lost extends React.Component {
   }
 }
 
+    // static navigationOptions = {
+    //   header: (
+    //   <Header>
+    //     <Left>
+    //       {/* <Button transparent onPress={() => this.props.navigation.navigate("DrawerOpen")}>
+    //         <Icon name="menu" />
+    //       </Button> */}
+    //     </Left>
+    //     <Body>
+    //       <Title>Found</Title>
+    //     </Body>
+    //     <Right />
+    //   </Header>
+    //   )
+    // }
+
   render() {
     let locationItems = this.arr.map( (s, i) => {
       return <Picker.Item key={i} value={s} label={s} />
@@ -86,18 +102,14 @@ export default class Lost extends React.Component {
       <Container>
         <Header>
           <Left>
-            <Button transparent>
+            <Button transparent transparent onPress={() => this.props.navigation.navigate("HomePage")}>
               <Icon name='arrow-back' />
             </Button>
           </Left>
           <Body>
-            <Title>Found Page</Title>
+            <Title>Found</Title>
           </Body>
-          <Right>
-            <Button transparent>
-              <Icon name='menu' />
-            </Button>
-          </Right>
+          <Right />
         </Header>
 
         <View style={styles.content}>  

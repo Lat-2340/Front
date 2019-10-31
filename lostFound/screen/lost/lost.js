@@ -73,24 +73,36 @@ export default class Lost extends Component {
   }
 }
 
+// static navigationOptions = {
+//       header: (
+//       <Header>
+//         <Left>
+//           {/* <Button transparent onPress={() => this.props.navigation.navigate("DrawerOpen")}>
+//             <Icon name="menu" />
+//           </Button> */}
+//         </Left>
+//         <Body>
+//           <Title>Lost</Title>
+//         </Body>
+//         <Right />
+//       </Header>
+//       )
+//     }
+
   render() {
     //const { navigate } = this.props.navigation;
     return (
       <Container>
         <Header>
           <Left>
-            <Button transparent>
+            <Button transparent transparent onPress={() => this.props.navigation.navigate("HomePage")}>
               <Icon name='arrow-back' />
             </Button>
           </Left>
           <Body>
-            <Title>Lost Page</Title>
+            <Title>Lost</Title>
           </Body>
-          <Right>
-            <Button transparent>
-              <Icon name='menu' />
-            </Button>
-          </Right>
+          <Right />
         </Header>
 
         <View style={styles.content}>  

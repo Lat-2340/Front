@@ -18,14 +18,13 @@ import {
 import {
   StyleSheet,
   View,
-  AppRegistry, Alert
+  StatusBar
 } from 'react-native';
-import {createStackNavigator} from "react-navigation-stack";
-import { createDrawerNavigator } from "react-navigation-drawer";
-import SideBar from "../sideBar/sidebar.js";
-import LostPage from '../lost/lost.js';
-import FoundPage from '../found/found.js';
-
+// import {createStackNavigator} from "react-navigation-stack";
+// import { createDrawerNavigator } from "react-navigation-drawer";
+// import HomePage from "../home/home.js"
+// import SideBar from "../sideBar/sidebar.js";
+// import LostPage from '../lost/lost.js';
 // const HomeScreenRouter = createDrawerNavigator(
 //   {
 //     HomePage: { screen: HomePage },
@@ -36,25 +35,29 @@ import FoundPage from '../found/found.js';
 //   }
 // );
 
+
 export default class Home extends Component {
-  static navigationOptions = {
-      header: (
-      <Header>
-        <Left>
-          <Button transparent onPress={() => this.props.navigation.navigate("DrawerOpen")}>
-            <Icon name="menu" />
-          </Button>
-        </Left>
-        <Body>
-          <Title>Home</Title>
-        </Body>
-        <Right />
-      </Header>
-      )
-    }
+  // static navigationOptions = {
+  //     header: null
+  //   }
+  
   render() {
     return (
       <Container style={styles.container}>
+      <Header>
+          <Left/>
+          <Body>
+            <Title>Home</Title>
+          </Body>
+          <Right>
+            <Button
+              transparent
+              onPress={() => this.props.navigation.navigate("SideBar")}
+            >
+              <Icon name="menu" />
+            </Button>
+          </Right>
+        </Header>
         <View style={{alignItems: 'center',justifyContent: 'center', marginTop: 50}}>
           <Button block style={styles.button}
           onPress={() => this.props.navigation.navigate("LostPage")}>
