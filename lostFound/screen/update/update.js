@@ -21,46 +21,74 @@ import {
   View
 } from 'react-native';
 import {createStackNavigator} from "react-navigation-stack";
-
-this.url = "http://35.153.212.32:8000/users/register";
-this.data = { 
-  username: 'example',
-  email: "ex@ex.com" ,
-  phone_number: "2173721046",
-  org: "UIUC CS",
-  password: "asdfg"};
+import Login from "../login/login.js"
+const url = "http://35.153.212.32:8000/users/update/Asd";
 
 export default class Update extends Component {
   
     constructor(props) {
       super(props);
       this.state = {
-        selected2: undefined
+        org: undefined,
+        username: "jialin"
       };
+      //this.data = {"username": "jialin", "password": "asdf", "email": "jialin@gmail.com", "phone_number": "1234", "org": "UIUC"};
+      this.changedData = {};
     }
- 
-    onValueChange2(value: string) {
-      this.setState({
-        selected2: value
-      });
+  
+    getUserName(){
+      return this.data["username"];
+    }
+    onValueChange(value: string) {
+      this.setState({ org: value});
+      this.changedData["org"] = value;
     }
 
+    onTextChange(key: string, value: string){
+        this.changedData[key] = value;
+    }
     navigateToLogin = () => {
       console.log("signon->login");
       this.props.navigation.navigate('Login');    
     }
 
-    postRegister = async () => {
+  //   fetchUserData = async () => {
+  //     try{
+  //       const response = await fetch(url, {
+  //         method: "GET",
+  //         headers:{
+  //             "Content-Type": "application/json",
+  //             "Authorization: ": "Token " + Login.getToken() 
+  //         },
+  //       })
+  //       const content = await response.json();
+  //       if (response.status == 200){
+  //           this.data["username"] = content.username;
+  //           this.data["password"] = content.password;
+  //           this.data["email"] = content.email;
+  //           this.data["org"] = content.org;
+            
+  //           //url += this.data["username"];
+  //           if(content.hasOwnProperty("phone_number")){
+  //               this.data["phone_number"] = content.phone_number;
+  //           }
+  //       }
+  //     }catch (error){
+  //         console.error("Error:", error);
+  //     }
+  //  }
+    postUpdate = async () => {
       try {
         const response = await fetch(url, {
-            method: 'POST',
+            method: 'PATCH',
             headers: {
               'Content-Type': 'application/json',
+              "Authorization": "Token " + Login.getToken()
             },
-            body: JSON.stringify(data),
+            body: JSON.stringify(this.changedData),
         })
         const result = await response.json();
-        console.log('Success:', JSON.stringify(result));
+        console.log(result)
         this.navigateToLogin()
       } catch (error) {
         console.error('Error:', error);
@@ -71,7 +99,7 @@ export default class Update extends Component {
   render() {
     return (
       <Container style={styles.container}>
-
+   
         <Header>
           <Left>
             <Button
@@ -91,15 +119,15 @@ export default class Update extends Component {
           <Form>
             <Item floatingLabel>
               <Label>Username</Label>
-              <Input userName/>
+              <Input />
             </Item>
             <Item floatingLabel last>
               <Label>Phone Number *</Label>
-              <Input />
+              <Input onChangeText={text => this.onTextChange("phone_number", text)}/>
             </Item>
             <Item floatingLabel last>
               <Label>Email</Label>
-              <Input />
+              <Input onChangeText={text => this.onTextChange("email", text)}/>
             </Item>
             
             <Item picker>
@@ -107,11 +135,11 @@ export default class Update extends Component {
                 mode="dropdown"
                 iosIcon={<Icon name="ios-arrow-down" />}
                 style={{ width: undefined }}
-                placeholder="Select your Organization"
+               
                 placeholderStyle={{ color: "#bfc6ea" }}
                 placeholderIconColor="#007aff"
-                selectedValue={this.state.selected2}
-                onValueChange={this.onValueChange2.bind(this)}
+                selectedValue={this.state.org}
+                onValueChange={(label)=> this.onValueChange(label)}
               >
                 <Item label="Computer Science" value="key0" />
                 <Item label="Electrical Computer Engineering" value="key1" />
@@ -123,7 +151,7 @@ export default class Update extends Component {
           
             <Item floatingLabel last>
               <Label>Password *</Label>
-              <Input secureTextEntry />
+              <Input secureTextEntry onChangeText={text => this.onTextChange("password", text)}/>
             </Item>
             <Item floatingLabel last>
               <Label>Confirm Password *</Label>
@@ -133,7 +161,7 @@ export default class Update extends Component {
         </View> 
         <View style={{alignItems: 'center',justifyContent: 'center', marginTop: 50}}>
           <Button block style={styles.button}
-          onPress={this.postRegister}>
+          onPress={this.postUpdate}>
             <Text>Update Profile</Text>
           </Button>
         </View> 
@@ -154,6 +182,3 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   }
 });
-
-
-

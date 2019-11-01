@@ -22,28 +22,31 @@ import {
 } from 'react-native';
 import {createStackNavigator} from "react-navigation-stack";
 
-this.url = "http://35.153.212.32:8000/users/register";
-this.data = { 
-  username: 'example',
-  email: "ex@ex.com" ,
-  phone_number: "2173721046",
-  org: "UIUC CS",
-  password: "asdfg"};
+const url = "http://35.153.212.32:8000/users/register";
+// this.data = { 
+//   username: 'example',
+//   email: "ex@ex.com" ,
+//   phone_number: "2173721046",
+//   org: "UIUC CS",
+//   password: "asdfg"};
 
 export default class Signon extends Component {
   
-    constructor(props) {
+   constructor(props) {
       super(props);
       this.state = {
-        selected2: undefined
+        org: undefined,
       };
+      this.data = {};
     }
 
+    onValueChange(value: string) {
+      this.setState({org:value});
+      this.data["org"] = value;
+    }
 
-    onValueChange2(value: string) {
-      this.setState({
-        selected2: value
-      });
+    onChangeText(key:string, value:string){
+      this.data[key] = value;
     }
 
     navigateToLogin = () => {
@@ -52,17 +55,26 @@ export default class Signon extends Component {
     }
 
     postRegister = async () => {
+      console.log(this.data)
       try {
         const response = await fetch(url, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify(data),
+            body: JSON.stringify(this.data),
         })
-        const result = await response.json();
-        console.log('Success:', JSON.stringify(result));
-        this.navigateToLogin()
+
+        let content = await response.json();
+        console.log(content);
+        if (response.status == 201){
+          console.log("Signon Success!");
+          console.log(content);
+          this.props.navigation.navigate("Login");
+        }
+        else{
+          console.error("Invalid Input!")
+        }
       } catch (error) {
         console.error('Error:', error);
       }
@@ -76,39 +88,39 @@ export default class Signon extends Component {
           <Form>
             <Item floatingLabel>
               <Label>Username</Label>
-              <Input userName/>
+              <Input onChangeText={text => this.onChangeText("username", text)}/>
             </Item>
             <Item floatingLabel last>
               <Label>Phone Number *</Label>
-              <Input />
+              <Input onChangeText={text => this.onChangeText("phone_number", text)}/>
             </Item>
             <Item floatingLabel last>
               <Label>Email</Label>
-              <Input />
+              <Input onChangeText={text => this.onChangeText("email", text)}/>
             </Item>
             
             <Item picker>
               <Picker
                 mode="dropdown"
                 iosIcon={<Icon name="ios-arrow-down" />}
-                style={{ width: undefined }}
+                style={{ width: undefined,marginTop: 30, }}
                 placeholder="Select your Organization"
                 placeholderStyle={{ color: "#bfc6ea" }}
                 placeholderIconColor="#007aff"
-                selectedValue={this.state.selected2}
-                onValueChange={this.onValueChange2.bind(this)}
+                selectedValue={this.state.org}
+                onValueChange={(label)=> this.onValueChange(label)}
               >
-                <Item label="Computer Science" value="key0" />
-                <Item label="Electrical Computer Engineering" value="key1" />
-                <Item label="Finance" value="key2" />
-                <Item label="Aerospace Engineering" value="key3" />
-                <Item label="Civil Environmental Engineering" value="key4" />
+                <Item label="Undergrad" value="Undergrad" />
+                <Item label="Stats" value="Stats" />
+                <Item label="Physics" value="Physics" />
+                <Item label="ECE" value="ECE" />
+                <Item label="CS" value="CS" />
               </Picker>
             </Item>
           
             <Item floatingLabel last>
               <Label>Password *</Label>
-              <Input secureTextEntry />
+              <Input secureTextEntry onChangeText={text => this.onChangeText("password", text)}/>
             </Item>
             <Item floatingLabel last>
               <Label>Confirm Password *</Label>

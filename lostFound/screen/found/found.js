@@ -19,8 +19,11 @@ import {
 } from "native-base";
 
 import MyDatepicker from './datepicker.js'
-//import dopoffLocations from '../App.js'
+import Login from '../login/login.js'
+// import {user_token} from '../login/login.js';
+//const token = Login.token
 const url =  "http://35.153.212.32:8000/users/login";
+const pickup_url = "http://35.153.212.32:8000/users/pickup-locations";
 
 export default class Lost extends React.Component {
   constructor(props) {
@@ -31,7 +34,7 @@ export default class Lost extends React.Component {
       category: undefined,
       dropoffLoc: undefined
     };
-    this.arr = ["grainger", "siebel"]
+    this.pickUpLocArr = ["Siebel Center", "DCL"]
     this.data = {"features":{}}
   }
 
@@ -59,6 +62,34 @@ export default class Lost extends React.Component {
     this.data["date_time"]= value
     //console.log(this.data)
   }
+
+  // fetchPickUpLoc = async() => {
+  //   //console.log(token)
+  //   try {
+  //     const response = await fetch(pickup_url, {
+  //         method: 'GET',
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //           "Authorization": "Token " + Login.getToken()
+  //         }
+  //     })
+  //     let content = await response.json();
+  //     console.log(content)
+  //     if (response.status == 200){
+  //       var place;
+  //       for (index in content){
+  //         this.pickUpLocArr.push(content[index].office)
+  //       }
+  //       console.log(this.pickUpLocArr)
+  //       // this.pickUpLocArr = content;
+  //     }
+  //     else{
+  //       console.error("Something wrong!")
+  //     }
+  //   } catch (error) {
+  //     console.error('Error:', error);
+  //   }
+  // }
 
   handlePress = async () => {
     console.log(this.data);
@@ -94,10 +125,11 @@ export default class Lost extends React.Component {
     // }
 
   render() {
-    let locationItems = this.arr.map( (s, i) => {
+
+    let locationItems = this.pickUpLocArr.map( (s, i) => {
       return <Picker.Item key={i} value={s} label={s} />
     });
-
+    
     return (
       <Container>
         <Header>
