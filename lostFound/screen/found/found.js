@@ -22,7 +22,7 @@ import MyDatepicker from './datepicker.js'
 import Login from '../login/login.js'
 // import {user_token} from '../login/login.js';
 //const token = Login.token
-const url =  "http://35.153.212.32:8000/users/login";
+const url =  "http://35.153.212.32:8000/lostandfound/found-items";
 const pickup_url = "http://35.153.212.32:8000/users/pickup-locations";
 
 export default class Lost extends React.Component {
@@ -32,24 +32,24 @@ export default class Lost extends React.Component {
       color: undefined,
       size: undefined,
       category: undefined,
-      dropoffLoc: undefined
+      dropoffLoc: undefined,
+      pickUpLocArr: []
     };
-    this.pickUpLocArr = ["Siebel Center", "DCL"]
-    this.data = {"features":{}}
+    this.data = {}
   }
 
   onValueChange(key: string, value: string) {
 
-    if(key == "color")
+    if(key == "feature_color")
       this.setState({color: value});
-    else if(key == "size")
+    else if(key == "feature_size")
       this.setState({size: value});
-    else if(key == "category")
+    else if(key == "feature_category")
       this.setState({category: value});
     else if(key == "dropoffLocation")
       this.setState({dropoffLoc: value});
  
-    this.data["features"][key] = value;
+    this.data[key] = value;
     console.log(this.data)
   }
 
@@ -59,50 +59,68 @@ export default class Lost extends React.Component {
   }
 
   onChangeDate(value: string) {
-    this.data["date_time"]= value
+    this.data["date"]= value
     //console.log(this.data)
   }
 
-  // fetchPickUpLoc = async() => {
-  //   //console.log(token)
-  //   try {
-  //     const response = await fetch(pickup_url, {
-  //         method: 'GET',
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //           "Authorization": "Token " + Login.getToken()
-  //         }
-  //     })
-  //     let content = await response.json();
-  //     console.log(content)
-  //     if (response.status == 200){
-  //       var place;
-  //       for (index in content){
-  //         this.pickUpLocArr.push(content[index].office)
-  //       }
-  //       console.log(this.pickUpLocArr)
-  //       // this.pickUpLocArr = content;
-  //     }
-  //     else{
-  //       console.error("Something wrong!")
-  //     }
-  //   } catch (error) {
-  //     console.error('Error:', error);
-  //   }
-  // }
+  fetchPickUpLoc = async() => {
+    //console.log(token)
+    try {
+      const response = await fetch(pickup_url, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            "Authorization": "Token " + Login.getToken()
+          }
+      })
+      let content = await response.json();
+      console.log(content)
+      if (response.status == 200){
+        var place;
+        for (index in content){
+          console.log(index)
+          let arr = this.state.pickUpLocArr;
+          arr.push(content[index].office);
+          this.setState({pickUpLocArr: arr});
+          //this.pickUpLocArr.push(content[index].office)
+        }
+        console.log("show pickuplocation1");
+        console.log(this.state.pickUpLocArr)
+        // this.pickUpLocArr = content;
+      }
+      else{
+        console.error("Something wrong!")
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+
+  componentWillMount() {
+      // this.setState({username: this.data["username"]});
+      // this.setState({password: this.data["password"]});
+      // this.setState({email: this.data["email"]});
+      // this.setState({state: this.data["org"]});
+      // this.setState({phone_number: this.data["phone_number"]})
+      this.fetchPickUpLoc();
+  }
 
   handlePress = async () => {
     console.log(this.data);
+    this.data["location_lat"] = 59.2
+    this.data["location_long"] = 77.8
     try {
     const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          "Authorization": "Token " + Login.getToken()
         },
         body: JSON.stringify(this.data),
     })
     const result = await response.json();
     console.log('Success:', JSON.stringify(result));
+    this.props.navigation.navigate("HomePage");
   } catch (error) {
     console.error('Error:', error);
   }
@@ -125,9 +143,10 @@ export default class Lost extends React.Component {
     // }
 
   render() {
-
-    let locationItems = this.pickUpLocArr.map( (s, i) => {
-      return <Picker.Item key={i} value={s} label={s} />
+    console.log("display in render")
+    console.log(this.state.pickUpLocArr)
+    let locationItems = this.state.pickUpLocArr.map( (s) => {
+      return <Picker.Item key={1} value={s} label={s} />
     });
     
     return (
@@ -150,7 +169,7 @@ export default class Lost extends React.Component {
             <Text style = {{paddingBottom:2}}> Where did you find this lost item? </Text>
           </Item>
           <Item regular style={{top:30, borderColor: 'gray', width: 250, height:50}}>
-            <Input placeholder='Grainger Library' onChangeText={text => this.onChangeText("location", text)}/>         
+            <Input placeholder='Grainger Library' />         
           </Item>
   
          <Item style={{top:50}}>
@@ -195,7 +214,7 @@ export default class Lost extends React.Component {
               placeholder="Select Color"
               placeholderStyle={{ color: 'white', paddingLeft:4}}
               selectedValue={this.state.color}
-              onValueChange={(label, value)=> this.onValueChange("color", label)}
+              onValueChange={(label, value)=> this.onValueChange("feature_color", label)}
             >
               <Picker.Item label="Black" value="Black" />
               <Picker.Item label="White" value="White" />
@@ -216,7 +235,7 @@ export default class Lost extends React.Component {
               placeholder="Select Size"
               placeholderStyle={{ color: 'white', paddingLeft:4}}
               selectedValue={this.state.size}
-              onValueChange={(label, value)=> this.onValueChange("size", label)}
+              onValueChange={(label, value)=> this.onValueChange("feature_size", label)}
             >
               <Picker.Item label="< 10 cm" value="< 10 cm" />
               <Picker.Item label="< 20 cm" value="< 20 cm" />
@@ -236,7 +255,7 @@ export default class Lost extends React.Component {
               placeholder="Select Category"
               placeholderStyle={{color: 'white', paddingLeft:4}}
               selectedValue={this.state.category}
-              onValueChange={(label, value)=> this.onValueChange("category", label)}
+              onValueChange={(label, value)=> this.onValueChange("feature_category", label)}
             >
               <Picker.Item label="Electronic Items" value="Electronic Items" />
               <Picker.Item label="Daily Items" value="Daily Items" />

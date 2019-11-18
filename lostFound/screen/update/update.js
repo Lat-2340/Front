@@ -29,10 +29,14 @@ export default class Update extends Component {
     constructor(props) {
       super(props);
       this.state = {
+        username: undefined,
+        password: undefined,
+        email: undefined,
         org: undefined,
-        username: "jialin"
+        phone_number: undefined
       };
-      //this.data = {"username": "jialin", "password": "asdf", "email": "jialin@gmail.com", "phone_number": "1234", "org": "UIUC"};
+
+      this.data = {};
       this.changedData = {};
     }
   
@@ -47,36 +51,61 @@ export default class Update extends Component {
     onTextChange(key: string, value: string){
         this.changedData[key] = value;
     }
+
+    combinedChange(key:string, value:string){
+        this.changedData[key] = value;
+        this.setState({password: value})
+    }
     navigateToLogin = () => {
-      console.log("signon->login");
+      console.log("update profile");
       this.props.navigation.navigate('Login');    
     }
 
-  //   fetchUserData = async () => {
-  //     try{
-  //       const response = await fetch(url, {
-  //         method: "GET",
-  //         headers:{
-  //             "Content-Type": "application/json",
-  //             "Authorization: ": "Token " + Login.getToken() 
-  //         },
-  //       })
-  //       const content = await response.json();
-  //       if (response.status == 200){
-  //           this.data["username"] = content.username;
-  //           this.data["password"] = content.password;
-  //           this.data["email"] = content.email;
-  //           this.data["org"] = content.org;
+    fetchUserData = async () => {
+      console.log("in fetch dat");
+      console.log("Token");
+      console.log(Login.getToken());
+      try{
+        const response = await fetch(url, {
+          method: "GET",
+          headers:{
+              "Content-Type": "application/json",
+              "Authorization": "Token " + Login.getToken() 
+          },
+        })
+        
+        const content = await response.json();
+        console.log("find something")
+        console.log(Login.getToken())
+        console.log(content)
+        if (response.status == 200){
+            this.setState({username: content.username});
+            this.setState({password: content.password});
+            this.setState({email: content.email});
+            this.setState({org: content.org});
             
-  //           //url += this.data["username"];
-  //           if(content.hasOwnProperty("phone_number")){
-  //               this.data["phone_number"] = content.phone_number;
-  //           }
-  //       }
-  //     }catch (error){
-  //         console.error("Error:", error);
-  //     }
-  //  }
+            
+            //url += this.data["username"];
+            if(content.hasOwnProperty("phone_number")){
+                this.setState({phone_number: content.phone_number});
+            }
+            //this.componentWillMount();
+        }
+      }catch (error){
+          console.error("Error:", error);
+      }
+   }
+
+    componentWillMount() {
+      // this.setState({username: this.data["username"]});
+      // this.setState({password: this.data["password"]});
+      // this.setState({email: this.data["email"]});
+      // this.setState({state: this.data["org"]});
+      // this.setState({phone_number: this.data["phone_number"]})
+      this.fetchUserData();
+      console.log("show username");
+      console.log(this.state.username);
+  }
     postUpdate = async () => {
       try {
         const response = await fetch(url, {
@@ -98,6 +127,8 @@ export default class Update extends Component {
 
   render() {
     return (
+
+    
       <Container style={styles.container}>
    
         <Header>
@@ -119,7 +150,7 @@ export default class Update extends Component {
           <Form>
             <Item floatingLabel>
               <Label>Username</Label>
-              <Input />
+              <Input value={this.state.username}/>
             </Item>
             <Item floatingLabel last>
               <Label>Phone Number *</Label>
@@ -134,24 +165,24 @@ export default class Update extends Component {
               <Picker
                 mode="dropdown"
                 iosIcon={<Icon name="ios-arrow-down" />}
-                style={{ width: undefined }}
-               
+                style={{ width: "30%" ,marginTop: 30,}}
+                placeholder="Select your Organization"
                 placeholderStyle={{ color: "#bfc6ea" }}
                 placeholderIconColor="#007aff"
                 selectedValue={this.state.org}
                 onValueChange={(label)=> this.onValueChange(label)}
               >
-                <Item label="Computer Science" value="key0" />
-                <Item label="Electrical Computer Engineering" value="key1" />
-                <Item label="Finance" value="key2" />
-                <Item label="Aerospace Engineering" value="key3" />
-                <Item label="Civil Environmental Engineering" value="key4" />
+                <Item label="Undergrad" value="Undergrad" />
+                <Item label="Stats" value="Stats" />
+                <Item label="Physics" value="Physics" />
+                <Item label="ECE" value="ECE" />
+                <Item label="CS" value="CS" />
               </Picker>
             </Item>
           
             <Item floatingLabel last>
               <Label>Password *</Label>
-              <Input secureTextEntry onChangeText={text => this.onTextChange("password", text)}/>
+              <Input  onChangeText={text => this.combinedChange("password", text)}/>
             </Item>
             <Item floatingLabel last>
               <Label>Confirm Password *</Label>

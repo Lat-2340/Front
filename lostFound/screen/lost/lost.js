@@ -19,8 +19,8 @@ import {
 } from "native-base";
 
 import MyDatepicker from './datepicker.js'
-
-const url =  "http://35.153.212.32:8000/users/login";
+import Login from "../login/login.js"
+const url =  "http://35.153.212.32:8000/lostandfound/lost-items";
 
 export default class Lost extends Component {
   constructor(props) {
@@ -31,19 +31,19 @@ export default class Lost extends Component {
       category: undefined
     };
 
-    this.data = {"features":{}}
+    this.data = {}
   }
 
   onValueChange(key: string, value: string) {
 
-    if(key == "color")
+    if(key == "feature_color")
       this.setState({color: value});
-    else if(key == "size")
+    else if(key == "feature_size")
       this.setState({size: value});
-    else if(key == "category")
+    else if(key == "feature_category")
       this.setState({category: value});
 
-    this.data["features"][key] = value
+    this.data[key] = value
   }
 
   onChangeText(key:string, value: string) {
@@ -52,22 +52,27 @@ export default class Lost extends Component {
   }
 
   onChangeDate(value: string) {
-    this.data["date_time"]= value
+    this.data["date"]= value
     //console.log(this.data)
   }
 
   handlePress = async () => {
+    this.data["location_lat"] = 99.0
+    this.data["location_long"] = 65.1
+
     console.log(this.data);
     try {
     const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          "Authorization": "Token " + Login.getToken()
         },
         body: JSON.stringify(this.data),
     })
     const result = await response.json();
     console.log('Success:', JSON.stringify(result));
+    this.props.navigation.navigate("HomePage");
   } catch (error) {
     console.error('Error:', error);
   }
@@ -111,7 +116,7 @@ export default class Lost extends Component {
             <Text style = {{paddingBottom:2}}> Where did you lose your favoriate item? </Text>
           </Item>
           <Item regular style={{top:30, borderColor: 'gray', width: 250, height:50}}>
-            <Input placeholder='Grainger Library' onChangeText={text => this.onChangeText("location", text)}/>         
+            <Input placeholder='Grainger Library'/>         
           </Item>
   
          <Item style={{top:70}}>
@@ -134,7 +139,7 @@ export default class Lost extends Component {
               placeholder="Select Color"
               placeholderStyle={{ color: 'white', paddingLeft:4}}
               selectedValue={this.state.color}
-              onValueChange={(label, value)=> this.onValueChange("color", label)}
+              onValueChange={(label, value)=> this.onValueChange("feature_color", label)}
             >
               <Picker.Item label="Black" value="Black" />
               <Picker.Item label="White" value="White" />
@@ -155,7 +160,7 @@ export default class Lost extends Component {
               placeholder="Select Size"
               placeholderStyle={{ color: 'white', paddingLeft:4}}
               selectedValue={this.state.size}
-              onValueChange={(label, value)=> this.onValueChange("size", label)}
+              onValueChange={(label, value)=> this.onValueChange("feature_size", label)}
             >
               <Picker.Item label="< 10 cm" value="< 10 cm" />
               <Picker.Item label="< 20 cm" value="< 20 cm" />
@@ -175,7 +180,7 @@ export default class Lost extends Component {
               placeholder="Select Category"
               placeholderStyle={{color: 'white', paddingLeft:4}}
               selectedValue={this.state.category}
-              onValueChange={(label, value)=> this.onValueChange("category", label)}
+              onValueChange={(label, value)=> this.onValueChange("feature_category", label)}
             >
               <Picker.Item label="Electronic Items" value="Electronic Items" />
               <Picker.Item label="Daily Items" value="Daily Items" />
