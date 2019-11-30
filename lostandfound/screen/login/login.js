@@ -22,14 +22,14 @@ import {
 } from 'react-native';
 import {createStackNavigator} from "react-navigation-stack";
 
-const url = "http://35.153.212.32:8000/users/login";
-const pickup_url =  "http://35.153.212.32:8000/users/pickup-locations";
+const url = "http://127.0.0.1:8000/users/login";
+const pickup_url =  "http://127.0.0.1:8000/users/pickup-locations";
 
 // export const user_token = this.token
 
 export default class Login extends Component {
   static token = null;
-   
+
   constructor(props) {
       super(props);
       this.state = {
@@ -38,7 +38,7 @@ export default class Login extends Component {
       this.pickUpLocArr = [];
       //this.token = undefined;
     }
-    
+
     static getToken(){
       return token;
     }
@@ -89,7 +89,7 @@ export default class Login extends Component {
       console.log(response.status);
       if (response.status == 200){
         token = content.token;
-      
+
         this.fetchPickUpLoc();
         this.props.navigation.navigate("HomePage");
       }
@@ -132,7 +132,7 @@ export default class Login extends Component {
     }
   render() {
     // const { navigate } = this.props.navigation;
-    
+
     return (
       <Container style={styles.container}>
         {/* <Header>
@@ -158,20 +158,20 @@ export default class Login extends Component {
               <Input secureTextEntry onChangeText={text => this.onChangeText("password", text)}/>
             </Item>
           </Form>
-        </View> 
+        </View>
         <View style={{alignItems: 'center',justifyContent: 'center', marginTop: 50}}>
           <Button block style={styles.button}
           onPress={this.postRegister}>
             <Text>Sign In</Text>
           </Button>
-          <Button block bordered primary style={styles.button} 
+          <Button block bordered primary style={styles.button}
           onPress={() => this.props.navigation.navigate("Signon")}>
             <Text>Sign On</Text>
           </Button>
           <Button block transparent style={styles.button}>
             <Text style={{textDecorationLine: 'underline', color:"grey"}}>Forget your password?</Text>
           </Button>
-        </View> 
+        </View>
       </Container>
     );
   }
@@ -182,10 +182,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF",
   },
   button: {
-    width:"80%", 
-    marginLeft: "10%", 
-    marginRight: "10%", 
-    marginTop: 30, 
+    width:"80%",
+    marginLeft: "10%",
+    marginRight: "10%",
+    marginTop: 30,
     textAlign: 'center'
   }
 });

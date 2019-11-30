@@ -22,8 +22,8 @@ import {
 } from 'react-native';
 import {createStackNavigator} from "react-navigation-stack";
 
-const url = "http://35.153.212.32:8000/users/register";
-// this.data = { 
+const url = "http://127.0.0.1:8000/users/register";
+// this.data = {
 //   username: 'example',
 //   email: "ex@ex.com" ,
 //   phone_number: "2173721046",
@@ -31,7 +31,7 @@ const url = "http://35.153.212.32:8000/users/register";
 //   password: "asdfg"};
 
 export default class Signon extends Component {
-  
+
    constructor(props) {
       super(props);
       this.state = {
@@ -51,7 +51,7 @@ export default class Signon extends Component {
 
     navigateToLogin = () => {
       console.log("signon->login");
-      this.props.navigation.navigate('Login');    
+      this.props.navigation.navigate('Login');
     }
 
     postRegister = async () => {
@@ -98,7 +98,7 @@ export default class Signon extends Component {
               <Label>Email</Label>
               <Input onChangeText={text => this.onChangeText("email", text)}/>
             </Item>
-            
+
             <Item picker>
               <Picker
                 mode="dropdown"
@@ -117,7 +117,7 @@ export default class Signon extends Component {
                 <Item label="CS" value="CS" />
               </Picker>
             </Item>
-          
+
             <Item floatingLabel last>
               <Label>Password *</Label>
               <Input secureTextEntry onChangeText={text => this.onChangeText("password", text)}/>
@@ -127,13 +127,13 @@ export default class Signon extends Component {
               <Input secureTextEntry />
             </Item>
           </Form>
-        </View> 
+        </View>
         <View style={{alignItems: 'center',justifyContent: 'center', marginTop: 50}}>
           <Button block style={styles.button}
           onPress={this.postRegister}>
             <Text>Sign On</Text>
           </Button>
-        </View> 
+        </View>
       </Container>
     );
   }
@@ -144,10 +144,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF",
   },
   button: {
-    width:"80%", 
-    marginLeft: "10%", 
-    marginRight: "10%", 
-    marginTop: 30, 
+    width:"80%",
+    marginLeft: "10%",
+    marginRight: "10%",
+    marginTop: 30,
     textAlign: 'center'
   }
 });

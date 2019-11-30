@@ -22,10 +22,10 @@ import {
 } from 'react-native';
 import {createStackNavigator} from "react-navigation-stack";
 import Login from "../login/login.js"
-const url = "http://35.153.212.32:8000/users/update/Asd";
+const url = "http://127.0.0.1:8000/users/update/Asd";
 
 export default class Update extends Component {
-  
+
     constructor(props) {
       super(props);
       this.state = {
@@ -39,7 +39,7 @@ export default class Update extends Component {
       this.data = {};
       this.changedData = {};
     }
-  
+
     getUserName(){
       return this.data["username"];
     }
@@ -58,7 +58,7 @@ export default class Update extends Component {
     }
     navigateToLogin = () => {
       console.log("update profile");
-      this.props.navigation.navigate('Login');    
+      this.props.navigation.navigate('Login');
     }
 
     fetchUserData = async () => {
@@ -70,10 +70,10 @@ export default class Update extends Component {
           method: "GET",
           headers:{
               "Content-Type": "application/json",
-              "Authorization": "Token " + Login.getToken() 
+              "Authorization": "Token " + Login.getToken()
           },
         })
-        
+
         const content = await response.json();
         console.log("find something")
         console.log(Login.getToken())
@@ -83,8 +83,8 @@ export default class Update extends Component {
             this.setState({password: content.password});
             this.setState({email: content.email});
             this.setState({org: content.org});
-            
-            
+
+
             //url += this.data["username"];
             if(content.hasOwnProperty("phone_number")){
                 this.setState({phone_number: content.phone_number});
@@ -128,9 +128,9 @@ export default class Update extends Component {
   render() {
     return (
 
-    
+
       <Container style={styles.container}>
-   
+
         <Header>
           <Left>
             <Button
@@ -160,7 +160,7 @@ export default class Update extends Component {
               <Label>Email</Label>
               <Input onChangeText={text => this.onTextChange("email", text)}/>
             </Item>
-            
+
             <Item picker>
               <Picker
                 mode="dropdown"
@@ -179,7 +179,7 @@ export default class Update extends Component {
                 <Item label="CS" value="CS" />
               </Picker>
             </Item>
-          
+
             <Item floatingLabel last>
               <Label>Password *</Label>
               <Input  onChangeText={text => this.combinedChange("password", text)}/>
@@ -189,13 +189,13 @@ export default class Update extends Component {
               <Input secureTextEntry />
             </Item>
           </Form>
-        </View> 
+        </View>
         <View style={{alignItems: 'center',justifyContent: 'center', marginTop: 50}}>
           <Button block style={styles.button}
           onPress={this.postUpdate}>
             <Text>Update Profile</Text>
           </Button>
-        </View> 
+        </View>
       </Container>
     );
   }
@@ -206,10 +206,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF",
   },
   button: {
-    width:"80%", 
-    marginLeft: "10%", 
-    marginRight: "10%", 
-    marginTop: 30, 
+    width:"80%",
+    marginLeft: "10%",
+    marginRight: "10%",
+    marginTop: 30,
     textAlign: 'center'
   }
 });

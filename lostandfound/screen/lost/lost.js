@@ -20,7 +20,7 @@ import {
 
 import MyDatepicker from './datepicker.js'
 import Login from "../login/login.js"
-const url =  "http://35.153.212.32:8000/lostandfound/lost-items";
+const url =  "http://127.0.0.1:8000/lostandfound/lost-items";
 
 export default class Lost extends Component {
   constructor(props) {
@@ -110,15 +110,15 @@ export default class Lost extends Component {
           <Right />
         </Header>
 
-        <View style={styles.content}>  
+        <View style={styles.content}>
           <Item style={{top:20}}>
             <Icon active name='home' />
             <Text style = {{paddingBottom:2}}> Where did you lose your favoriate item? </Text>
           </Item>
           <Item regular style={{top:30, borderColor: 'gray', width: 250, height:50}}>
-            <Input placeholder='Grainger Library'/>         
+            <Input placeholder='Grainger Library'/>
           </Item>
-  
+
          <Item style={{top:70}}>
             <Icon active name='time' />
             <Text style = {{paddingBottom:2}}> In which day did you lose your favoriate item? </Text>
@@ -131,7 +131,7 @@ export default class Lost extends Component {
           </Item>
 
           <Form style={{top:140, flex: 0.9, flexDirection:"row", justifyContent:'space-between'}}>
-            <Picker 
+            <Picker
               mode="dropdown"
               iosHeader="Select Color"
               iosIcon={<Icon name="arrow-dropdown-circle" style={{ color: "white", fontSize: 25}}/>}
@@ -152,7 +152,7 @@ export default class Lost extends Component {
 
             </Picker>
 
-            <Picker 
+            <Picker
               mode="dropdown"
               iosHeader="Select Size"
               iosIcon={<Icon name="arrow-dropdown-circle" style={{ color: "white", fontSize: 25}}/>}
@@ -172,7 +172,7 @@ export default class Lost extends Component {
           </Form>
 
           <Form style={{top:200}}>
-            <Picker 
+            <Picker
               mode="dropdown"
               iosHeader="Select Category"
               iosIcon={<Icon name="arrow-dropdown-circle" style={{ color: "white", fontSize: 25}}/>}
@@ -200,7 +200,7 @@ export default class Lost extends Component {
           <Button success style={{top: 240, width: 100, marginLeft: 275}} onPress={this.handlePress}>
             <Text> Submit</Text>
           </Button>
-          
+
 
         </View>
       </Container>

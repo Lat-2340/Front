@@ -22,8 +22,8 @@ import MyDatepicker from './datepicker.js'
 import Login from '../login/login.js'
 // import {user_token} from '../login/login.js';
 //const token = Login.token
-const url =  "http://35.153.212.32:8000/lostandfound/found-items";
-const pickup_url = "http://35.153.212.32:8000/users/pickup-locations";
+const url =  "http://127.0.0.1:8000/lostandfound/found-items";
+const pickup_url = "http://127.0.0.1:8000/users/pickup-locations";
 
 export default class Lost extends React.Component {
   constructor(props) {
@@ -48,7 +48,7 @@ export default class Lost extends React.Component {
       this.setState({category: value});
     else if(key == "dropoffLocation")
       this.setState({dropoffLoc: value});
- 
+
     this.data[key] = value;
     console.log(this.data)
   }
@@ -148,7 +148,7 @@ export default class Lost extends React.Component {
     let locationItems = this.state.pickUpLocArr.map( (s) => {
       return <Picker.Item key={1} value={s} label={s} />
     });
-    
+
     return (
       <Container>
         <Header>
@@ -163,28 +163,28 @@ export default class Lost extends React.Component {
           <Right />
         </Header>
 
-        <View style={styles.content}>  
+        <View style={styles.content}>
           <Item style={{top:20}}>
             <Icon active name='home' />
             <Text style = {{paddingBottom:2}}> Where did you find this lost item? </Text>
           </Item>
           <Item regular style={{top:30, borderColor: 'gray', width: 250, height:50}}>
-            <Input placeholder='Grainger Library' />         
+            <Input placeholder='Grainger Library' />
           </Item>
-  
+
          <Item style={{top:50}}>
             <Icon active name='time' />
             <Text style = {{paddingBottom:2}}> In which day did you find this lost item? </Text>
           </Item>
-          
+
           <MyDatepicker style={styles.container} handler = {date => this.onChangeDate(date)}  />
-      
+
           <Item style={{top:80}}>
             <Icon active name='ios-checkbox' />
             <Text style = {{paddingBottom:2}}> Pick one avaliable drop-off location </Text>
           </Item>
           <Form style={{top:90}}>
-            <Picker 
+            <Picker
               mode="dropdown"
               iosHeader="Drop-off place"
               iosIcon={<Icon name="arrow-dropdown-circle" style={{ color: "white", fontSize: 25}}/>}
@@ -206,7 +206,7 @@ export default class Lost extends React.Component {
           </Item>
 
           <Form style={{top:130, flex: 0.9, flexDirection:"row", justifyContent:'space-between'}}>
-            <Picker 
+            <Picker
               mode="dropdown"
               iosHeader="Select Color"
               iosIcon={<Icon name="arrow-dropdown-circle" style={{ color: "white", fontSize: 25}}/>}
@@ -227,7 +227,7 @@ export default class Lost extends React.Component {
 
             </Picker>
 
-            <Picker 
+            <Picker
               mode="dropdown"
               iosHeader="Select Size"
               iosIcon={<Icon name="arrow-dropdown-circle" style={{ color: "white", fontSize: 25}}/>}
@@ -247,7 +247,7 @@ export default class Lost extends React.Component {
           </Form>
 
           <Form style={{top:190}}>
-            <Picker 
+            <Picker
               mode="dropdown"
               iosHeader="Select Category"
               iosIcon={<Icon name="arrow-dropdown-circle" style={{ color: "white", fontSize: 25}}/>}
@@ -275,10 +275,10 @@ export default class Lost extends React.Component {
           <Button success style={{top: 210, width: 100, marginLeft: 270}} onPress={this.handlePress}>
             <Text> Submit</Text>
           </Button>
-          
-        
+
+
           <Icon active name='camera' style={{marginTop: 170, marginLeft: 20, width: 60}} />
-       
+
 
         </View>
       </Container>
@@ -289,7 +289,7 @@ export default class Lost extends React.Component {
     container: {
       width: "90%",
       top: 30,
-      marginTop: 30 
+      marginTop: 30
     },
     content: {
       width: "90%",
