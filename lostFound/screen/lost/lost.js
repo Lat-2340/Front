@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, TouchableOpacity, TextInput } from "react-native";
 import {createStackNavigator} from "react-navigation-stack";
-import { TextInput } from 'react-native';
 import {
   Button,
   Text,
@@ -17,10 +16,13 @@ import {
   Form,
   Picker
 } from "native-base";
+import { RNCamera } from 'react-native-camera';
 
 import MyDatepicker from './datepicker.js'
 import Login from "../login/login.js"
 const url =  "http://35.153.212.32:8000/lostandfound/lost-items";
+
+
 
 export default class Lost extends Component {
   constructor(props) {
@@ -28,10 +30,15 @@ export default class Lost extends Component {
     this.state = {
       color: undefined,
       size: undefined,
-      category: undefined
+      category: undefined,
+      isCameraVisiable: false
     };
 
     this.data = {}
+  }
+
+  showCameraView = () => {
+    this.setState({ isCameraVisible: true });
   }
 
   onValueChange(key: string, value: string) {
@@ -73,10 +80,12 @@ export default class Lost extends Component {
     const result = await response.json();
     console.log('Success:', JSON.stringify(result));
     this.props.navigation.navigate("HomePage");
-  } catch (error) {
-    console.error('Error:', error);
+    } catch (error) {
+      console.error('Error:', error);
+    }
   }
-}
+
+  
 
 // static navigationOptions = {
 //       header: (
@@ -96,6 +105,7 @@ export default class Lost extends Component {
 
   render() {
     //const { navigate } = this.props.navigation;
+    const { isCameraVisible } = this.state;
     return (
       <Container>
         <Header>
@@ -110,7 +120,8 @@ export default class Lost extends Component {
           <Right />
         </Header>
 
-        <View style={styles.content}>  
+        <View style={styles.content}>
+
           <Item style={{top:20}}>
             <Icon active name='home' />
             <Text style = {{paddingBottom:2}}> Where did you lose your favoriate item? </Text>
@@ -201,11 +212,62 @@ export default class Lost extends Component {
             <Text> Submit</Text>
           </Button>
           
+          
+          {!isCameraVisible &&<Button success title="Show me Camera" onPress={this.showCameraView} />}
+          {isCameraVisible &&
+          <View style={styles.content}>
+            <RNCamera
+              ref={ref => {
+                console.log("1111111");
+                this.camera = ref;
+                console.log("111122222111");
+              }}
+              style={styles.preview}
+              type={RNCamera.Constants.Type.back}
+              flashMode={RNCamera.Constants.FlashMode.on}
+              captureAudio={false}
+              permissionDialogTitle={'Permission to use camera'}
+              permissionDialogMessage={'We need your permission to use your camera phone'}
+            />
+            <View style={{ flex: 0, flexDirection: 'row', justifyContent: 'center', backgroundColor:"black" }}>
+              <TouchableOpacity onPress={this.takePicture.bind(this)} style={styles.capture}>
+                <Text style={{ fontSize: 14 }}> SNAP </Text>
+              </TouchableOpacity>
+            </View>
+          </View>}
 
         </View>
       </Container>
     );
   }
+
+  // takePicture() {
+  //   const options = {};
+  //   //options.location = ...
+  //   this.camera.capture({metadata: options})
+  //     .then((data) => {
+  //        console.log(data),
+  //        this.setState({ isCameraVisible: false }),}.catch(err => console.error(err));
+  // }
+
+  takePicture = async() => {
+    if (this.camera) {
+      console.log("test");
+      const options = { quality: 0.5, base64: true };
+      console.log("test1");
+      // const data = await this.camera.takePictureAsync();
+      try {
+      const cameraData = await this.camera.takePictureAsync()
+      console.log(cameraData.uri);
+    } catch (e) {
+     // This logs the error
+     console.log(
+       'err'
+     )
+      console.log(e)
+    }
+    }
+  };
 }
   const styles = StyleSheet.create({
     container: {
@@ -216,4 +278,23 @@ export default class Lost extends Component {
       width: "90%",
       margin: 20
     },
+    content1: {
+      width: "90%",
+      margin: 20,
+      color: "black"
+    },
+    capture: {
+    flex: 0,
+    backgroundColor: '#fff',
+    borderRadius: 5,
+    padding: 15,
+    paddingHorizontal: 20,
+    alignSelf: 'center',
+    margin: 20,
+  },
+  preview: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
   });

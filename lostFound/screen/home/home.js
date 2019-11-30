@@ -35,6 +35,8 @@ import {
 //   }
 // );
 
+import Login from '../login/login.js'
+
 
 export default class Home extends Component {
   // static navigationOptions = {
@@ -59,13 +61,17 @@ export default class Home extends Component {
           </Right>
         </Header>
         <View style={{alignItems: 'center',justifyContent: 'center', marginTop: 50}}>
-          <Button block style={styles.button}
+          <Button block style={styles.button1}
           onPress={() => this.props.navigation.navigate("LostPage")}>
-            <Text>LOST</Text>
+            <Text>Post my LOST item</Text>
           </Button>
-          <Button block bordered primary style={styles.button}
+          <Button block bordered primary style={styles.button1}
           onPress={() => this.props.navigation.navigate("FoundPage")}>
-            <Text>FOUND</Text>
+            <Text>Post the FOUND item</Text>
+          </Button>
+          <Button block transparent style={styles.button2}
+          onPress={() => this.props.navigation.navigate("MyStatusPage")}>
+            <Text style={{textDecorationLine: 'underline'}}>See my lost item status</Text>
           </Button> 
         </View> 
       </Container>
@@ -77,11 +83,20 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#FFF",
   },
-  button: {
-    width:"80%", 
+  button1: {
+    width:"80%",
+    height:"10%", 
     marginLeft: "10%", 
     marginRight: "10%", 
     marginTop: 30, 
+    textAlign: 'center'
+  },
+  button2: {
+    width:"80%",
+    height:"10%",
+    marginLeft: "10%", 
+    marginRight: "10%", 
+    marginTop: 200, 
     textAlign: 'center'
   }
 });
