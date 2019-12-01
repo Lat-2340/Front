@@ -28,10 +28,20 @@ export default class Lost extends Component {
     this.state = {
       color: undefined,
       size: undefined,
-      category: undefined
+      category: undefined,
+      isCameraVisiable: false
     };
 
     this.data = {}
+  }
+
+  showCameraView = () => {
+    this.setState({ isCameraVisible: true });
+  }
+
+  closeCameraView = () => {
+    this.setState({ isCameraVisible: false });
+    this.props.navigation.navigate("CameraPage");
   }
 
   onValueChange(key: string, value: string) {
@@ -96,6 +106,14 @@ export default class Lost extends Component {
 
   render() {
     //const { navigate } = this.props.navigation;
+    const { isCameraVisible } = this.state;
+    let cam_bnt;
+    if (isCameraVisible){
+      cam_bnt = <Button title="Show me Camera" onPress={this.showCameraView} />;          
+    }else{
+      cam_bnt = <Button title="Show me Camera" onPress={this.closeCameraView} />;  
+    }
+
     return (
       <Container>
         <Header>
@@ -109,7 +127,7 @@ export default class Lost extends Component {
           </Body>
           <Right />
         </Header>
-
+        
         <View style={styles.content}>
           <Item style={{top:20}}>
             <Icon active name='home' />
@@ -201,6 +219,13 @@ export default class Lost extends Component {
             <Text> Submit</Text>
           </Button>
 
+          <View style={styles.container}>
+            {/* {!isCameraVisible &&<Button title="Show me Camera" onPress={this.showCameraView} />}
+            {isCameraVisible &&
+            this.props.navigation.navigate("CameraPage")} */}
+            {cam_bnt}
+
+      </View>
 
         </View>
       </Container>
