@@ -129,7 +129,7 @@ export default class Lost extends Component {
     console.log(JSON.stringify(this.data["description"]))
     formData.append("description",JSON.stringify(this.data["description"]));
     
-    formData.append("features",this.data["features"]);
+    formData.append("features",JSON.stringify(this.data["features"]));
     if(this.data.hasOwnProperty("image")){
       formData.append("image",this.data["image"]);
     }

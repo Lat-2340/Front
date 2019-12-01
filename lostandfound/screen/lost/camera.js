@@ -158,7 +158,7 @@ export default class ImagePickerExample extends React.Component {
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 3],
-      quality: 1,
+      quality: 0.001,
       base64: true
     });
 
@@ -177,7 +177,7 @@ export default class ImagePickerExample extends React.Component {
     //       image: this.image
     //   });
     const {navigate,goBack,state} = this.props.navigation;
-    console.log(this.state);
+    // console.log(this.state);
     state.params.callback(this.state.file);
     this.props.navigation.goBack(); 
   };
