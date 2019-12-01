@@ -20,7 +20,7 @@ import {
 
 import MyDatepicker from './datepicker.js'
 import Login from "../login/login.js"
-const url =  "http://127.0.0.1:8000/lostandfound/lost-items";
+const url =  "http://127.0.0.1:8000/lostandfound/add-item";
 
 export default class Lost extends Component {
   constructor(props) {
@@ -29,10 +29,16 @@ export default class Lost extends Component {
       color: undefined,
       size: undefined,
       category: undefined,
+      image: undefined,
       isCameraVisiable: false
     };
 
-    this.data = {}
+    this.data = {
+      "is_lost": true,
+      "description":{},
+      "features":{}
+
+    }
   }
 
   showCameraView = () => {
@@ -41,7 +47,25 @@ export default class Lost extends Component {
 
   closeCameraView = () => {
     this.setState({ isCameraVisible: false });
-    this.props.navigation.navigate("CameraPage");
+    console.log(this.state.image)
+    this.props.navigation.navigate("CameraPage", {
+          image: null,
+          callback: (data)=>{
+              console.log(data);
+              console.log("???");
+                this.setState({
+                  image:data,
+                });
+                this.data["image"]= data;
+                console.log(this.data);
+                 }
+      }
+       );
+    console.log("back success");
+    console.log(this.state.image);
+    // this.data["image"]= this.state.image;
+    console.log("back success?");
+    console.log(this.data);
   }
 
   onValueChange(key: string, value: string) {
@@ -53,32 +77,73 @@ export default class Lost extends Component {
     else if(key == "feature_category")
       this.setState({category: value});
 
-    this.data[key] = value
+    this.data["features"][key] = value
   }
 
-  onChangeText(key:string, value: string) {
-    this.data[key]= value
+  onChangeDescription(key:string, value: string) {
+    this.data["description"][key]= value
     //console.log(this.data)
   }
 
   onChangeDate(value: string) {
-    this.data["date"]= value
+    this.data["date_time"]= value
     //console.log(this.data)
   }
 
-  handlePress = async () => {
-    this.data["location_lat"] = 99.0
-    this.data["location_long"] = 65.1
+  onChangeLocation(value: string) {
+    this.data["location"]= value
+    //console.log(this.data)
+  }
 
-    console.log(this.data);
+//   handlePress = async () => {
+//     this.data["location_lat"] = 99.0
+//     this.data["location_long"] = 65.1
+
+//     console.log(this.data);
+//     try {
+//     const response = await fetch(url, {
+//         method: 'POST',
+//         headers: {
+//           'Content-Type': 'application/json',
+//           "Authorization": "Token " + Login.getToken()
+//         },
+//         body: JSON.stringify(this.data),
+//     })
+//     const result = await response.json();
+//     console.log('Success:', JSON.stringify(result));
+//     this.props.navigation.navigate("HomePage");
+//   } catch (error) {
+//     console.error('Error:', error.text());
+//   }
+// }
+
+  handlePress = async () => {
+    var formData = new FormData();
+    formData.append("is_lost",this.data["is_lost"]);
+    if(this.data.hasOwnProperty("date_time")){
+      formData.append("date_time",this.data["date_time"]);
+    }
+    // if(this.data.hasOwnProperty("location")){
+    //   formData.append("location",this.data["location"]);
+    // }
+    console.log(JSON.stringify(this.data["description"]))
+    formData.append("description",JSON.stringify(this.data["description"]));
+    
+    formData.append("features",this.data["features"]);
+    if(this.data.hasOwnProperty("image")){
+      formData.append("image",this.data["image"]);
+    }
+    console.log(formData);
+
+    // console.log(this.data);
     try {
     const response = await fetch(url, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'multipart/form-data',
           "Authorization": "Token " + Login.getToken()
         },
-        body: JSON.stringify(this.data),
+        body: formData,
     })
     const result = await response.json();
     console.log('Success:', JSON.stringify(result));
@@ -109,9 +174,13 @@ export default class Lost extends Component {
     const { isCameraVisible } = this.state;
     let cam_bnt;
     if (isCameraVisible){
-      cam_bnt = <Button title="Show me Camera" onPress={this.showCameraView} />;          
+      cam_bnt = <Button title="Camera" onPress={this.showCameraView}>
+                  <Icon name='camera' />
+                </Button>;          
     }else{
-      cam_bnt = <Button title="Show me Camera" onPress={this.closeCameraView} />;  
+      cam_bnt = <Button title="Camera" onPress={this.closeCameraView}>
+                  <Icon name='camera' />
+                </Button>; ;  
     }
 
     return (
@@ -129,12 +198,20 @@ export default class Lost extends Component {
         </Header>
         
         <View style={styles.content}>
-          <Item style={{top:20}}>
+          <Item style={{top:10}}>
+            <Icon active name='bulb' />
+            <Text style = {{paddingBottom:2}}> Name this item first: </Text>
+          </Item>
+          <Item regular style={{top:25, borderColor: 'gray', width: 250, height:50}}>
+            <Input placeholder='Nickname' onChangeText={text => this.onChangeDescription("name",text)}/>
+          </Item>
+
+          <Item style={{top:40}}>
             <Icon active name='home' />
             <Text style = {{paddingBottom:2}}> Where did you lose your favoriate item? </Text>
           </Item>
-          <Item regular style={{top:30, borderColor: 'gray', width: 250, height:50}}>
-            <Input placeholder='Grainger Library'/>
+          <Item regular style={{top:55, borderColor: 'gray', width: 250, height:50}}>
+            <Input placeholder='Grainger Library' onChangeText={text => this.onChangeLocation(text)}/>
           </Item>
 
          <Item style={{top:70}}>
@@ -143,12 +220,12 @@ export default class Lost extends Component {
           </Item>
           <MyDatepicker handler = {date => this.onChangeDate(date)} style={styles.container} />
 
-          <Item style={{top:130}}>
+          <Item style={{top:110}}>
             <Icon active name='ios-add-circle-outline' />
             <Text style = {{paddingBottom:2}}> Describe your favoriate item </Text>
           </Item>
 
-          <Form style={{top:140, flex: 0.9, flexDirection:"row", justifyContent:'space-between'}}>
+          <Form style={{top:130, flex: 0.9, flexDirection:"row", justifyContent:'space-between'}}>
             <Picker
               mode="dropdown"
               iosHeader="Select Color"
@@ -211,21 +288,25 @@ export default class Lost extends Component {
             </Picker>
           </Form>
 
-          <Item regular style={{top: 220, height: 200}}>
-            <Input style={{marginTop:1}} placeholder='Additional Description:' onChangeText={text => this.onChangeText("description", text)}/>
+          <Item regular style={{top: 220, height: 160}}>
+            <Input style={{marginTop:1}} placeholder='Additional Description:' onChangeText={text => this.onChangeDescription("addtional", text)}/>
           </Item>
 
-          <Button success style={{top: 240, width: 100, marginLeft: 275}} onPress={this.handlePress}>
-            <Text> Submit</Text>
-          </Button>
+          <View style={{top:240, flex: 0.9, flexDirection:"column", justifyContent:'space-between'}}>
+            <View style={{width: 100, marginLeft: 275}}>
+            <Button success  onPress={this.handlePress}>
+              <Text> Submit</Text>
+            </Button>
+            </View>
 
-          <View style={styles.container}>
-            {/* {!isCameraVisible &&<Button title="Show me Camera" onPress={this.showCameraView} />}
-            {isCameraVisible &&
-            this.props.navigation.navigate("CameraPage")} */}
-            {cam_bnt}
+            <View style={{width: 50, marginLeft: 5}}>
+              {/* {!isCameraVisible &&<Button title="Show me Camera" onPress={this.showCameraView} />}
+              {isCameraVisible &&
+              this.props.navigation.navigate("CameraPage")} */}
+              {cam_bnt}
 
-      </View>
+            </View>
+          </View>
 
         </View>
       </Container>

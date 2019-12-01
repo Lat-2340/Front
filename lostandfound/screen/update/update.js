@@ -109,7 +109,7 @@ export default class Update extends Component {
     postUpdate = async () => {
       try {
         const response = await fetch(url, {
-            method: 'PATCH',
+            method: 'POST',
             headers: {
               'Content-Type': 'application/json',
               "Authorization": "Token " + Login.getToken()

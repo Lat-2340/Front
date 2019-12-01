@@ -114,7 +114,9 @@ import * as Permissions from 'expo-permissions';
 export default class ImagePickerExample extends React.Component {
   state = {
     image: null,
+    file: null
   };
+  
 
   render() {
     let { image } = this.state;
@@ -156,17 +158,27 @@ export default class ImagePickerExample extends React.Component {
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 3],
-      quality: 1
+      quality: 1,
+      base64: true
     });
 
     console.log(result);
 
     if (!result.cancelled) {
-      this.setState({ image: result.uri });
+      console.log(result.base64)
+      this.setState({ 
+        image: result.uri,
+        file: result.base64 });
     }
   };
 
   uploadImage = async () =>{
-      this.props.navigation.navigate("LostPage");
+    //   this.props.navigation.goBack("LostPage",{
+    //       image: this.image
+    //   });
+    const {navigate,goBack,state} = this.props.navigation;
+    console.log(this.state);
+    state.params.callback(this.state.file);
+    this.props.navigation.goBack(); 
   };
 }

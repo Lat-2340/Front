@@ -115,12 +115,25 @@ const datas = [
 ];
 
 class NHListThumbnail extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-        showToast: false
-        };
-    }
+  constructor(props) {
+      super(props);
+      this.state = {
+        showToast: false,
+        data: null
+      };
+
+  }
+
+  onPressDelete = async () =>{
+
+  }
+
+  componentWillMount() {
+      this.fetchLostItem();
+      console.log("show lost item");
+      console.log(this.state.username);
+  }
+
   render() {
     return (
       <Container style={styles.container}>
@@ -177,6 +190,7 @@ class NHListThumbnail extends Component {
                     block
                     danger
                     style={{ margin:10 }}
+                    onPress={this.onPressDelete}
                     >
                     <Icon active name="trash" />
                     <Text>Already found this item? Delete it now.</Text>

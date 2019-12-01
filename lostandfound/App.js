@@ -47,7 +47,7 @@ const navigator = createStackNavigator(
     }},
   },
   {
-    initialRouteName: "HomePage"
+    initialRouteName: "Login"
   }
 );
 

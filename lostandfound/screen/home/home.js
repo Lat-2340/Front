@@ -67,8 +67,9 @@ export default class Home extends Component {
           onPress={() => this.props.navigation.navigate("FoundPage")}>
             <Text>Post the FOUND item</Text>
           </Button>
-          <Button block transparent style={styles.button2}
+          <Button block iconleft style={styles.button2}
           onPress={() => this.props.navigation.navigate("MyStatusPage")}>
+            <Icon name='alert' />
             <Text style={{textDecorationLine: 'underline'}}>See my lost item status</Text>
           </Button> 
         </View> 
