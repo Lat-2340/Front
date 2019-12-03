@@ -44,7 +44,7 @@ class NHCardShowcase extends Component {
               <Left>
                 <Body>
                   <Text>{matchedItem['item_name']}</Text>
-                  <Text note>April 15, 2016</Text>
+                  <Text note>{matchedItem['date_time']['$date']}</Text>
                 </Body>
               </Left>
             </CardItem>
@@ -53,12 +53,14 @@ class NHCardShowcase extends Component {
               <Body>
                 <Image
                   style={{
+                    width: '100%',
+                    height: '100%',
                     alignSelf: "center",
                     resizeMode: "cover",
                     width: deviceWidth / 1.18,
                     marginVertical: 5
                   }}
-                  source={matchedItem.img}
+                  source={{uri: matchedItem.img}}
                 />
                 <Text>
                   {matchedItem.description}
