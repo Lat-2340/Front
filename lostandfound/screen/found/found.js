@@ -38,7 +38,6 @@ export default class Lost extends React.Component {
       isCameraVisiable: false
     };
     this.data = {
-      "is_lost": false,
       "description":{},
       "features":{}
     }
@@ -153,7 +152,7 @@ export default class Lost extends React.Component {
 
   handlePress = async () => {
     var formData = new FormData();
-    formData.append("is_lost",this.data["is_lost"]);
+    formData.append("is_lost", "");
     if(this.data.hasOwnProperty("date_time")){
       formData.append("date_time",this.data["date_time"]);
     }
