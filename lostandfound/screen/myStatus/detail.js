@@ -22,7 +22,7 @@ const cardImage = require("./test.jpg");
 
 class NHCardShowcase extends Component {
   render() {
-    const { matchedItem } = this.props.navigation.state.params.matchedItems;
+    const matchedItem = this.props.navigation.state.params.matchedItems;
 
     return (
       <Container style={styles.container}>
@@ -43,7 +43,7 @@ class NHCardShowcase extends Component {
             <CardItem bordered>
               <Left>
                 <Body>
-                  <Text>{matchedItem.item_name}</Text>
+                  <Text>{matchedItem['item_name']}</Text>
                   <Text note>April 15, 2016</Text>
                 </Body>
               </Left>
