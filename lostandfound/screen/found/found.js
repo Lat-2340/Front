@@ -164,14 +164,12 @@ export default class Lost extends React.Component {
     }
     console.log(JSON.stringify(this.data["description"]))
     formData.append("description",JSON.stringify(this.data["description"]));
-    
+
     formData.append("features",JSON.stringify(this.data["features"]));
     if(this.data.hasOwnProperty("image")){
       formData.append("image",this.data["image"]);
     }
-    console.log(formData);
 
-    // console.log(this.data);
     try {
     const response = await fetch(url, {
         method: 'POST',
@@ -227,11 +225,11 @@ export default class Lost extends React.Component {
     if (isCameraVisible){
       cam_bnt = <Button title="Camera" onPress={this.showCameraView}>
                   <Icon name='camera' />
-                </Button>;          
+                </Button>;
     }else{
       cam_bnt = <Button title="Camera" onPress={this.closeCameraView}>
                   <Icon name='camera' />
-                </Button>; ;  
+                </Button>; ;
     }
 
     return (
@@ -249,8 +247,8 @@ export default class Lost extends React.Component {
         </Header>
 
         <View style={styles.content}>
-         
-          
+
+
           <Item style={{top:10}}>
             <Icon active name='bulb' />
             <Text style = {{paddingBottom:2}}> Name this item first: </Text>

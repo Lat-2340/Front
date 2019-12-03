@@ -21,6 +21,8 @@ import MyStatusPage from './screen/myStatus/myStatus.js'
 import DetailPage from './screen/myStatus/detail.js'
 import CameraPage from './screen/lost/camera.js'
 
+console.disableYellowBox = true;
+
 const navigator = createStackNavigator(
   {
     Login: { screen: Login },
