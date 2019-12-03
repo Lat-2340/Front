@@ -80,8 +80,13 @@ export default class Lost extends Component {
     this.data["features"][key] = value
   }
 
-  onChangeDescription(key:string, value: string) {
-    this.data["description"][key]= value
+  onChangeName(value: string) {
+    this.data["item_name"]= value
+    //console.log(this.data)
+  }
+
+  onChangeDescription(value: string) {
+    this.data["description"]= value
     //console.log(this.data)
   }
 
@@ -203,7 +208,7 @@ export default class Lost extends Component {
             <Text style = {{paddingBottom:2}}> Name this item first: </Text>
           </Item>
           <Item regular style={{top:25, borderColor: 'gray', width: 250, height:50}}>
-            <Input placeholder='Nickname' onChangeText={text => this.onChangeDescription("name",text)}/>
+            <Input placeholder='Nickname' onChangeText={text => this.onChangeName(text)}/>
           </Item>
 
           <Item style={{top:40}}>
@@ -289,7 +294,7 @@ export default class Lost extends Component {
           </Form>
 
           <Item regular style={{top: 220, height: 160}}>
-            <Input style={{marginTop:1}} placeholder='Additional Description:' onChangeText={text => this.onChangeDescription("addtional", text)}/>
+            <Input style={{marginTop:1}} placeholder='Additional Description:' onChangeText={text => this.onChangeDescription(text)}/>
           </Item>
 
           <View style={{top:240, flex: 0.9, flexDirection:"column", justifyContent:'space-between'}}>

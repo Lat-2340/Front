@@ -22,7 +22,7 @@ import MyDatepicker from './datepicker.js'
 import Login from '../login/login.js'
 // import {user_token} from '../login/login.js';
 //const token = Login.token
-const url =  "http://127.0.0.1:8000/lostandfound/found-items";
+const url =  "http://127.0.0.1:8000/lostandfound/add-item";
 const pickup_url = "http://127.0.0.1:8000/users/pickup-locations";
 
 export default class Lost extends React.Component {
@@ -33,9 +33,15 @@ export default class Lost extends React.Component {
       size: undefined,
       category: undefined,
       dropoffLoc: undefined,
-      pickUpLocArr: []
+      pickUpLocArr: [],
+      image: undefined,
+      isCameraVisiable: false
     };
-    this.data = {}
+    this.data = {
+      "is_lost": false,
+      "description":{},
+      "features":{}
+    }
   }
 
   onValueChange(key: string, value: string) {
@@ -46,8 +52,6 @@ export default class Lost extends React.Component {
       this.setState({size: value});
     else if(key == "feature_category")
       this.setState({category: value});
-    else if(key == "dropoffLocation")
-      this.setState({dropoffLoc: value});
 
     this.data[key] = value;
     console.log(this.data)
@@ -55,11 +59,6 @@ export default class Lost extends React.Component {
 
   onChangeText(key:string, value: string) {
     this.data[key]= value
-    //console.log(this.data)
-  }
-
-  onChangeDate(value: string) {
-    this.data["date"]= value
     //console.log(this.data)
   }
 
@@ -84,6 +83,7 @@ export default class Lost extends React.Component {
           this.setState({pickUpLocArr: arr});
           //this.pickUpLocArr.push(content[index].office)
         }
+        // TODO: empty location
         console.log("show pickuplocation1");
         console.log(this.state.pickUpLocArr)
         // this.pickUpLocArr = content;
@@ -105,18 +105,79 @@ export default class Lost extends React.Component {
       this.fetchPickUpLoc();
   }
 
-  handlePress = async () => {
+  showCameraView = () => {
+    this.setState({ isCameraVisible: true });
+  }
+
+  closeCameraView = () => {
+    this.setState({ isCameraVisible: false });
+    console.log(this.state.image)
+    this.props.navigation.navigate("CameraPage", {
+          image: null,
+          callback: (data)=>{
+              console.log(data);
+              console.log("???");
+                this.setState({
+                  image:data,
+                });
+                this.data["image"]= data;
+                console.log(this.data);
+                 }
+      }
+       );
+    console.log("back success");
+    console.log(this.state.image);
+    // this.data["image"]= this.state.image;
+    console.log("back success?");
     console.log(this.data);
-    this.data["location_lat"] = 59.2
-    this.data["location_long"] = 77.8
+  }
+
+//   handlePress = async () => {
+//     console.log(this.data);
+//     try {
+//     const response = await fetch(url, {
+//         method: 'POST',
+//         headers: {
+//           'Content-Type': 'application/json',
+//           "Authorization": "Token " + Login.getToken()
+//         },
+//         body: JSON.stringify(this.data),
+//     })
+//     const result = await response.json();
+//     console.log('Success:', JSON.stringify(result));
+//     this.props.navigation.navigate("HomePage");
+//   } catch (error) {
+//     console.error('Error:', error);
+//   }
+// }
+
+  handlePress = async () => {
+    var formData = new FormData();
+    formData.append("is_lost",this.data["is_lost"]);
+    if(this.data.hasOwnProperty("date_time")){
+      formData.append("date_time",this.data["date_time"]);
+    }
+    if(this.data.hasOwnProperty("pickup_addres")){
+      formData.append("pickup_addres",this.data["pickup_addres"]);
+    }
+    console.log(JSON.stringify(this.data["description"]))
+    formData.append("description",JSON.stringify(this.data["description"]));
+    
+    formData.append("features",JSON.stringify(this.data["features"]));
+    if(this.data.hasOwnProperty("image")){
+      formData.append("image",this.data["image"]);
+    }
+    console.log(formData);
+
+    // console.log(this.data);
     try {
     const response = await fetch(url, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'multipart/form-data',
           "Authorization": "Token " + Login.getToken()
         },
-        body: JSON.stringify(this.data),
+        body: formData,
     })
     const result = await response.json();
     console.log('Success:', JSON.stringify(result));
@@ -126,21 +187,31 @@ export default class Lost extends React.Component {
   }
 }
 
-    // static navigationOptions = {
-    //   header: (
-    //   <Header>
-    //     <Left>
-    //       {/* <Button transparent onPress={() => this.props.navigation.navigate("DrawerOpen")}>
-    //         <Icon name="menu" />
-    //       </Button> */}
-    //     </Left>
-    //     <Body>
-    //       <Title>Found</Title>
-    //     </Body>
-    //     <Right />
-    //   </Header>
-    //   )
-    // }
+  onChangeName(value: string) {
+    this.data["item_name"]= value
+    //console.log(this.data)
+  }
+
+  onChangeLocation(value: string) {
+    this.data["location"]= value
+    //console.log(this.data)
+  }
+
+  onChangeDate(value: string) {
+    this.data["date_time"]= value
+    //console.log(this.data)
+  }
+
+  onChangePickup(value: string) {
+    this.data["pickup_address"]= value
+    //console.log(this.data)
+  }
+
+  onChangeDescription(value: string) {
+    this.data["description"]= value
+    //console.log(this.data)
+  }
+
 
   render() {
     console.log("display in render")
@@ -148,6 +219,18 @@ export default class Lost extends React.Component {
     let locationItems = this.state.pickUpLocArr.map( (s) => {
       return <Picker.Item key={1} value={s} label={s} />
     });
+
+    const { isCameraVisible } = this.state;
+    let cam_bnt;
+    if (isCameraVisible){
+      cam_bnt = <Button title="Camera" onPress={this.showCameraView}>
+                  <Icon name='camera' />
+                </Button>;          
+    }else{
+      cam_bnt = <Button title="Camera" onPress={this.closeCameraView}>
+                  <Icon name='camera' />
+                </Button>; ;  
+    }
 
     return (
       <Container>
@@ -164,20 +247,29 @@ export default class Lost extends React.Component {
         </Header>
 
         <View style={styles.content}>
-          <Item style={{top:20}}>
+         
+          
+          <Item style={{top:10}}>
+            <Icon active name='bulb' />
+            <Text style = {{paddingBottom:2}}> Name this item first: </Text>
+          </Item>
+          <Item regular style={{top:20, borderColor: 'gray', width: 250, height:50}}>
+            <Input placeholder='Nickname' onChangeText={text => this.onChangeName(text)}/>
+          </Item>
+
+          <Item style={{top:30}}>
             <Icon active name='home' />
             <Text style = {{paddingBottom:2}}> Where did you find this lost item? </Text>
           </Item>
-          <Item regular style={{top:30, borderColor: 'gray', width: 250, height:50}}>
-            <Input placeholder='Grainger Library' />
+          <Item regular style={{top:40, borderColor: 'gray', width: 250, height:50}}>
+            <Input placeholder='Grainger Library' onChangeText={text => this.onChangeLocation(text)}/>
           </Item>
 
-         <Item style={{top:50}}>
+          <Item style={{top:55}}>
             <Icon active name='time' />
             <Text style = {{paddingBottom:2}}> In which day did you find this lost item? </Text>
           </Item>
-
-          <MyDatepicker style={styles.container} handler = {date => this.onChangeDate(date)}  />
+          <MyDatepicker handler = {date => this.onChangeDate(date)} style={styles.container} />
 
           <Item style={{top:80}}>
             <Icon active name='ios-checkbox' />
@@ -192,7 +284,7 @@ export default class Lost extends React.Component {
               placeholder="Drop-off place"
               placeholderStyle={{color: 'white', paddingLeft:4}}
               selectedValue={this.state.dropoffLoc}
-              onValueChange={(label)=> this.onValueChange("dropoffLocation", label)}
+              onValueChange={(label)=> this.onChangePickup("dropoffLocation", label)}
             >
               {locationItems}
             </Picker>
@@ -200,12 +292,12 @@ export default class Lost extends React.Component {
 
 
 
-          <Item style={{top:120}}>
+          <Item style={{top:110}}>
             <Icon active name='ios-add-circle-outline' />
             <Text style = {{paddingBottom:2}}> Describe your favoriate item </Text>
           </Item>
 
-          <Form style={{top:130, flex: 0.9, flexDirection:"row", justifyContent:'space-between'}}>
+          <Form style={{top:120, flex: 0.9, flexDirection:"row", justifyContent:'space-between'}}>
             <Picker
               mode="dropdown"
               iosHeader="Select Color"
@@ -246,7 +338,7 @@ export default class Lost extends React.Component {
             </Picker>
           </Form>
 
-          <Form style={{top:190}}>
+          <Form style={{top:170}}>
             <Picker
               mode="dropdown"
               iosHeader="Select Category"
@@ -268,16 +360,32 @@ export default class Lost extends React.Component {
             </Picker>
           </Form>
 
-          <Item regular style={{top: 200, height: 200}}>
-            <Input style={{marginTop:1}} placeholder='Additional Description:' onChangeText={text => this.onChangeText("description", text)}/>
+          <Item regular style={{top: 180, height: 140}}>
+            <Input style={{marginTop:1}} placeholder='Additional Description:' onChangeText={text => this.onChangeDescription(text)}/>
           </Item>
 
-          <Button success style={{top: 210, width: 100, marginLeft: 270}} onPress={this.handlePress}>
+          {/* <Button success style={{top: 210, width: 100, marginLeft: 270}} onPress={this.handlePress}>
             <Text> Submit</Text>
           </Button>
 
 
-          <Icon active name='camera' style={{marginTop: 170, marginLeft: 20, width: 60}} />
+          <Icon active name='camera' style={{marginTop: 170, marginLeft: 20, width: 60}} /> */}
+
+          <View style={{top:190, flex: 0.9, flexDirection:"column", justifyContent:'space-between'}}>
+            <View style={{width: 100, marginLeft: 275}}>
+            <Button success  onPress={this.handlePress}>
+              <Text> Submit</Text>
+            </Button>
+            </View>
+
+            <View style={{width: 50, marginLeft: 5}}>
+              {/* {!isCameraVisible &&<Button title="Show me Camera" onPress={this.showCameraView} />}
+              {isCameraVisible &&
+              this.props.navigation.navigate("CameraPage")} */}
+              {cam_bnt}
+
+            </View>
+          </View>
 
 
         </View>
