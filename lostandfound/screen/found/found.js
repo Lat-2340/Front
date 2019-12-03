@@ -38,7 +38,7 @@ export default class Lost extends React.Component {
       isCameraVisiable: false
     };
     this.data = {
-      "description":{},
+      "description": "",
       "features":{}
     }
   }
@@ -162,8 +162,7 @@ export default class Lost extends React.Component {
     if(this.data.hasOwnProperty("item_name")){
       formData.append("item_name",this.data["item_name"]);
     }
-    console.log(JSON.stringify(this.data["description"]))
-    formData.append("description",JSON.stringify(this.data["description"]));
+    formData.append("description", this.data["description"]);
 
     formData.append("features",JSON.stringify(this.data["features"]));
     if(this.data.hasOwnProperty("image")){
