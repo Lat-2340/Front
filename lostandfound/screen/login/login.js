@@ -45,8 +45,6 @@ export default class Login extends Component {
     }
 
     static getName(){
-      console.log(this.data);
-      name = this.data["username"];
       return name;
     }
 
@@ -82,6 +80,7 @@ export default class Login extends Component {
   }
 
   postRegister = async () => {
+    name = this.data["username"];
     console.log("postRegistration")
     try {
       const response = await fetch(url, {

@@ -24,7 +24,10 @@ import {createStackNavigator} from "react-navigation-stack";
 import Login from "../login/login.js"
 const url = "http://127.0.0.1:8000/users/update/";
 
+
 export default class Update extends Component {
+    static name = null;
+    static user_url = null;
 
     constructor(props) {
       super(props);
@@ -101,17 +104,14 @@ export default class Update extends Component {
       // this.setState({email: this.data["email"]});
       // this.setState({state: this.data["org"]});
       // this.setState({phone_number: this.data["phone_number"]})
-      this.setState({ username: Login.getName()});
-      console.log("show username");
-      console.log(this.state.username);
-      this.setState({ user_url: url+this.state.username});
-      console.log(this.state.user_url);
+      name = Login.getName();
+      user_url = url+name;
       this.fetchUserData();
       
   }
     postUpdate = async () => {
       try {
-        const response = await fetch(url, {
+        const response = await fetch(user_url, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
