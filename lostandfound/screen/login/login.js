@@ -29,6 +29,7 @@ const pickup_url =  "http://127.0.0.1:8000/users/pickup-locations";
 
 export default class Login extends Component {
   static token = null;
+  static name = null;
 
   constructor(props) {
       super(props);
@@ -41,6 +42,12 @@ export default class Login extends Component {
 
     static getToken(){
       return token;
+    }
+
+    static getName(){
+      console.log(this.data);
+      name = this.data["username"];
+      return name;
     }
 
     static getPickUpLoc(){
@@ -168,9 +175,9 @@ export default class Login extends Component {
           onPress={() => this.props.navigation.navigate("Signon")}>
             <Text>Sign On</Text>
           </Button>
-          <Button block transparent style={styles.button}>
+          {/* <Button block transparent style={styles.button}>
             <Text style={{textDecorationLine: 'underline', color:"grey"}}>Forget your password?</Text>
-          </Button>
+          </Button> */}
         </View>
       </Container>
     );

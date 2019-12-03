@@ -159,6 +159,9 @@ export default class Lost extends React.Component {
     if(this.data.hasOwnProperty("pickup_addres")){
       formData.append("pickup_addres",this.data["pickup_addres"]);
     }
+    if(this.data.hasOwnProperty("item_name")){
+      formData.append("item_name",this.data["item_name"]);
+    }
     console.log(JSON.stringify(this.data["description"]))
     formData.append("description",JSON.stringify(this.data["description"]));
     

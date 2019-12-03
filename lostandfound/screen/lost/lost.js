@@ -131,9 +131,11 @@ export default class Lost extends Component {
     // if(this.data.hasOwnProperty("location")){
     //   formData.append("location",this.data["location"]);
     // }
-    console.log(JSON.stringify(this.data["description"]))
-    formData.append("description",JSON.stringify(this.data["description"]));
     
+    formData.append("description",JSON.stringify(this.data["description"]));
+    if(this.data.hasOwnProperty("item_name")){
+      formData.append("item_name",this.data["item_name"]);
+    }
     formData.append("features",JSON.stringify(this.data["features"]));
     if(this.data.hasOwnProperty("image")){
       formData.append("image",this.data["image"]);
