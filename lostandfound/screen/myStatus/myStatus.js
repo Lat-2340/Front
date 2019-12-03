@@ -25,108 +25,21 @@ import Login from "../login/login.js"
 import {
   IP_PORT,
   LOST_AND_FOUND,
-  GET_USER_LOST_ITEMS
+  GET_USER_LOST_ITEMS,
+  GET_MATCHED_FOUND_ITEMS
 } from '../../const.js';
 
 const GET_LOST_ITEMS_URL = IP_PORT + LOST_AND_FOUND + GET_USER_LOST_ITEMS
+const GET_MATCHED_FOUND_ITEMS_URL = IP_PORT + LOST_AND_FOUND + GET_MATCHED_FOUND_ITEMS
 
-const test = require("./test.jpg");
-
-
-const datas = [
-  {
-    name: "item1",
-    img: test,
-    items: [
-      {
-        img_match: test,
-        text: "Sankhadeep",
-        note: "Its time to build a difference . ."
-      },
-      {
-        img_match: test,
-        text: "Sankhadeep",
-        note: "Its time to build a difference . ."
-      },
-      {
-        img_match: test,
-        text: "Sankhadeep",
-        note: "Its time to build a difference . ."
-      }
-    ]
-  },
-  {
-    name: "item2",
-    img: test,
-    items: [
-      {
-        img_match: test,
-        text: "Sankhadeep",
-        note: "Its time to build a difference . ."
-      },
-      {
-        img_match: test,
-        text: "Sankhadeep",
-        note: "Its time to build a difference . ."
-      },
-      {
-        img_match: test,
-        text: "Sankhadeep",
-        note: "Its time to build a difference . ."
-      }
-    ]
-  },
-  {
-    name: "item3",
-    img: test,
-    items: [
-      {
-        img_match: test,
-        text: "Sankhadeep",
-        note: "Its time to build a difference . ."
-      },
-      {
-        img_match: test,
-        text: "Sankhadeep",
-        note: "Its time to build a difference . ."
-      },
-      {
-        img_match: test,
-        text: "Sankhadeep",
-        note: "Its time to build a difference . ."
-      }
-    ]
-  },
-  {
-    name: "item4",
-    img: test,
-    items: [
-      {
-        img_match: test,
-        text: "Sankhadeep",
-        note: "Its time to build a difference . ."
-      },
-      {
-        img_match: test,
-        text: "Sankhadeep",
-        note: "Its time to build a difference . ."
-      },
-      {
-        img_match: test,
-        text: "Sankhadeep",
-        note: "Its time to build a difference . ."
-      }
-    ]
-  },
-];
 
 class NHListThumbnail extends Component {
   constructor(props) {
     super(props);
     this.state = {
       showToast: false,
-      data: null,
       lostItems: [],
+      matchedFoundItems: {},
     };
 
   }
@@ -143,8 +56,14 @@ class NHListThumbnail extends Component {
           "Authorization": "Token " + Login.getToken()
         },
       })
+
+      if (response.status != 200) {
+        Alert.alert("Failed to fetch lost items.")
+        console.error(response)
+        return
+      }
+
       const result = await response.json();
-      // console.log('Success:', result);
 
       resLostItems = result['lost_items'].map(itemInfo => JSON.parse(itemInfo))
       result['lost_images'].forEach((img, i) => {
@@ -154,6 +73,49 @@ class NHListThumbnail extends Component {
       this.setState({
         lostItems: resLostItems
       })
+
+      // console.log(this.state.lostItems)
+
+      this.state.lostItems.forEach(item => {
+        this.fetchMatchedFoundItems(item['_id']['$oid'])
+      })
+
+    } catch (error) {
+      Alert.alert(error);
+      console.error(error);
+    }
+  }
+
+  fetchMatchedFoundItems = async (itemId) => {
+    try {
+      url = GET_MATCHED_FOUND_ITEMS_URL + "?id=" + itemId
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          "Authorization": "Token " + Login.getToken()
+        },
+      })
+
+      if (response.status != 200) {
+        Alert.alert("Failed to fetch matched found items.")
+        console.error(response)
+        return
+      }
+
+      const result = await response.json();
+
+      matchedItems = result['matched_items'].map(itemInfo => JSON.parse(itemInfo))
+      result['matched_images'].forEach((img, i) => {
+        matchedItems[i]['img'] = 'data:image/png;base64,' + img
+      });
+
+      this.setState((state) => {
+        state.matchedFoundItems[itemId] = matchedItems
+        return {
+          matchedFoundItems: state.matchedFoundItems
+        };
+      })
+      // console.log(this.state.matchedFoundItems)
 
     } catch (error) {
       Alert.alert(error);
@@ -182,41 +144,41 @@ class NHListThumbnail extends Component {
         <Content>
           <List
             dataArray={this.state.lostItems}
-            renderRow={data =>
+            renderRow={lostItem =>
               <List>
                 <ListItem itemHeader>
-                  <Image source={{uri: data.img}} style={{ width: '10%', height: '100%' }} />
+                  <Image source={{uri: lostItem.img}} style={{ width: '10%', height: '100%' }} />
                   <Text
                     style={{
                       margin: 5,
                       fontSize: 18,
                       fontWeight: 'bold',
                     }} >
-                    {data.name}
+                    {lostItem.item_name}
                   </Text>
                 </ListItem>
-                {/* <List
-                  dataArray={data.items}
-                  renderRow={items =>
+                <List
+                  dataArray={this.state.matchedFoundItems[lostItem['_id']['$oid']]}
+                  renderRow={matchedItems =>
                     <ListItem thumbnail>
                       <Left>
-                        <Thumbnail square source={items.img_match} />
+                        <Thumbnail square source={{uri: matchedItems.img}} />
                       </Left>
                       <Body>
                         <Text>
-                          {items.text}
+                          {matchedItems.item_name}
                         </Text>
                         <Text numberOfLines={1} note>
-                          {items.note}
+                          {matchedItems.description}
                         </Text>
                       </Body>
                       <Right>
-                        <Button transparent onPress={() => this.props.navigation.navigate("DetailPage", { items })}>
+                        <Button transparent onPress={() => this.props.navigation.navigate("DetailPage", { matchedItems })}>
                           <Text>Detail</Text>
                         </Button>
                       </Right>
                     </ListItem>}
-                /> */}
+                />
                 <Button
                   block
                   danger
