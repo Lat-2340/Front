@@ -82,7 +82,6 @@ export default class Lost extends Component {
 
   onChangeName(value: string) {
     this.data["item_name"]= value
-    //console.log(this.data)
   }
 
   onChangeDescription(value: string) {
@@ -128,9 +127,9 @@ export default class Lost extends Component {
     if(this.data.hasOwnProperty("date_time")){
       formData.append("date_time",this.data["date_time"]);
     }
-    // if(this.data.hasOwnProperty("location")){
-    //   formData.append("location",this.data["location"]);
-    // }
+    if(this.data.hasOwnProperty("item_name")){
+      formData.append("item_name", this.data["item_name"]);
+    }
     console.log(JSON.stringify(this.data["description"]))
     formData.append("description",JSON.stringify(this.data["description"]));
 
