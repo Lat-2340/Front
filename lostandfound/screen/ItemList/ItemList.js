@@ -104,8 +104,7 @@ class NHListThumbnail extends Component {
       this.setState({
         lostItems: resLostItems
       })
-
-      console.log(this.state.lostItems)
+      // console.log(this.state.lostItems)
 
       this.state.lostItems.forEach(item => {
         this.fetchMatchFoundItems(item)
