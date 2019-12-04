@@ -21,6 +21,7 @@ import ItemListPage from './screen/ItemList/ItemList.js'
 import ItemDetailPage from './screen/ItemList/ItemDetail.js'
 import CameraPage from './screen/lost/camera.js'
 
+
 console.disableYellowBox = true;
 
 const navigator = createStackNavigator(

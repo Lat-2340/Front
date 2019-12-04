@@ -18,7 +18,8 @@ import {
 import {
   StyleSheet,
   View,
-  StatusBar
+  StatusBar,
+  Image
 } from 'react-native';
 // import {createStackNavigator} from "react-navigation-stack";
 // import { createDrawerNavigator } from "react-navigation-drawer";
@@ -73,6 +74,20 @@ export default class Home extends Component {
             <Text style={{textDecorationLine: 'underline'}}>See my lost item status</Text>
           </Button>
         </View>
+
+        <Image
+            source={
+              require('../../picture/build.jpg')
+            }
+            style={{
+              bottom: 0,
+              height: 150,
+              width: 450,
+              alignSelf: "center",
+              position: "absolute"
+            }}
+          />
+
       </Container>
     );
   }
