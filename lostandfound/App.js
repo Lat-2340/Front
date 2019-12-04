@@ -8,8 +8,8 @@ import HomePage from './screen/home/index.js'
 import LostPage from './screen/lost/lost.js'
 import FoundPage from './screen/found/found.js'
 import SideBar from './screen/sidebar/sidebar.js'
-import ItemListPage from './screen/itemList/ItemList.js'
-import ItemDetailPage from './screen/itemList/ItemDetail.js'
+import ItemListPage from './screen/item/itemList.js'
+import ItemDetailPage from './screen/item/itemDetail.js'
 import CameraPage from './screen/lost/camera.js'
 
 
