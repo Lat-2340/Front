@@ -123,10 +123,10 @@ export default class ImagePickerExample extends React.Component {
 
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Button
+        {/* <Button
           title="Pick an image from camera roll"
           onPress={this._pickImage}
-        />
+        /> */}
         {image &&
         <View>
           <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
@@ -142,6 +142,10 @@ export default class ImagePickerExample extends React.Component {
   componentDidMount() {
     this.getPermissionAsync();
     console.log('hi');
+    this._pickImage();
+    if(this.state.image){
+      this.uploadImage();
+    }
   }
 
   getPermissionAsync = async () => {
@@ -169,6 +173,10 @@ export default class ImagePickerExample extends React.Component {
       this.setState({ 
         image: result.uri,
         file: result.base64 });
+    }
+
+    if (result.cancelled) {
+      this.props.navigation.goBack(); 
     }
   };
 

@@ -20,10 +20,21 @@ import {
 
 import MyDatepicker from './datepicker.js'
 import Login from '../login/login.js'
+
+import {
+  IP_PORT,
+  USERS,
+  LOST_AND_FOUND,
+  ADD_ITEM,
+  PICKUP_LOCATIONS
+} from '../../const.js';
 // import {user_token} from '../login/login.js';
 //const token = Login.token
-const url =  "http://127.0.0.1:8000/lostandfound/add-item";
-const pickup_url = "http://127.0.0.1:8000/users/pickup-locations";
+// const url =  "http://127.0.0.1:8000/lostandfound/add-item";
+const ADD_ITEM_URL = IP_PORT + LOST_AND_FOUND + ADD_ITEM
+// const pickup_url = "http://127.0.0.1:8000/users/pickup-locations";
+const PICKUP_LOCATIONS_URL = IP_PORT + USERS + PICKUP_LOCATIONS
+
 
 export default class Lost extends React.Component {
   constructor(props) {
@@ -64,7 +75,7 @@ export default class Lost extends React.Component {
   fetchPickUpLoc = async() => {
     //console.log(token)
     try {
-      const response = await fetch(pickup_url, {
+      const response = await fetch(PICKUP_LOCATIONS_URL, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -170,7 +181,7 @@ export default class Lost extends React.Component {
     }
 
     try {
-    const response = await fetch(url, {
+    const response = await fetch(ADD_ITEM_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'multipart/form-data',

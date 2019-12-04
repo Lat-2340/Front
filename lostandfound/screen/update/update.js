@@ -22,7 +22,14 @@ import {
 } from 'react-native';
 import {createStackNavigator} from "react-navigation-stack";
 import Login from "../login/login.js"
-const url = "http://127.0.0.1:8000/users/update/";
+
+import {
+  IP_PORT,
+  USERS,
+  UPDATE
+} from '../../const.js';
+// const url = "http://127.0.0.1:8000/users/update/";
+const UPDATE_URL = IP_PORT + USERS + UPDATE
 
 
 export default class Update extends Component {
@@ -37,7 +44,6 @@ export default class Update extends Component {
         email: undefined,
         org: undefined,
         phone_number: undefined,
-        user_url: undefined
       };
 
       this.data = {};
@@ -105,14 +111,14 @@ export default class Update extends Component {
       // this.setState({state: this.data["org"]});
       // this.setState({phone_number: this.data["phone_number"]})
       name = Login.getName();
-      user_url = url+name;
+      user_url = UPDATE_URL+name;
       this.fetchUserData();
       
   }
     postUpdate = async () => {
       try {
         const response = await fetch(user_url, {
-            method: 'POST',
+            method: 'PATCH',
             headers: {
               'Content-Type': 'application/json',
               "Authorization": "Token " + Login.getToken()
