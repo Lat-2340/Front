@@ -21,7 +21,6 @@ import {
   Alert,
   Image,
 } from 'react-native';
-import {createStackNavigator} from "react-navigation-stack";
 
 import {
   IP_PORT,
@@ -72,9 +71,11 @@ export default class Login extends Component {
             "Authorization": "Token " + token
           }
       })
-      let content = await response.json();
-      console.log(content)
+
       if (response.status == 200){
+        let content = await response.json();
+        console.log("pickup", content)
+
         var place;
         for (index in content){
           this.pickUpLocArr.push(content[index].office)

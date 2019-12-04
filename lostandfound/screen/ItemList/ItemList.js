@@ -20,7 +20,7 @@ import {
   Alert,
 } from 'react-native';
 
-import Login from "../login/login.js"
+import Login from "../user/login.js"
 
 import {
   IP_PORT,

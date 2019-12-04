@@ -19,7 +19,7 @@ import {
 } from "native-base";
 
 import MyDatepicker from './datepicker.js'
-import Login from "../login/login.js"
+import Login from "../user/login.js"
 
 import {
   IP_PORT,

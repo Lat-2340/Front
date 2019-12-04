@@ -15,7 +15,7 @@ import {
   Body
 } from 'native-base';
 
-import Login from "../login/login.js"
+import Login from "../user/login.js"
 
 import {
   DELETE_ITEM_URL

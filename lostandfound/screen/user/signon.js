@@ -20,7 +20,6 @@ import {
   StyleSheet,
   View
 } from 'react-native';
-import {createStackNavigator} from "react-navigation-stack";
 
 import {
   IP_PORT,

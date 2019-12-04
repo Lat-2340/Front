@@ -19,7 +19,7 @@ import {
 } from "native-base";
 
 import MyDatepicker from './datepicker.js'
-import Login from '../login/login.js'
+import Login from '../user/login.js'
 
 import {
   IP_PORT,
@@ -28,7 +28,7 @@ import {
   ADD_ITEM,
   PICKUP_LOCATIONS
 } from '../../const.js';
-// import {user_token} from '../login/login.js';
+// import {user_token} from '../user/login.js';
 //const token = Login.token
 // const url =  "http://127.0.0.1:8000/lostandfound/add-item";
 const ADD_ITEM_URL = IP_PORT + LOST_AND_FOUND + ADD_ITEM

@@ -1,18 +1,9 @@
-import React from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-} from 'react-native';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createAppContainer } from 'react-navigation'
 
-import Login from './screen/login/login.js'
-import Signon from './screen/login/signon.js'
-import UpdatePage from './screen/update/update.js'
+import LoginPage from './screen/user/login.js'
+import SignonPage from './screen/user/signon.js'
+import UpdatePage from './screen/user/update.js'
 import HomePage from './screen/home/index.js'
 import LostPage from './screen/lost/lost.js'
 import FoundPage from './screen/found/found.js'
@@ -26,8 +17,8 @@ console.disableYellowBox = true;
 
 const navigator = createStackNavigator(
   {
-    Login: { screen: Login },
-    Signon: { screen: Signon },
+    LoginPage: { screen: LoginPage },
+    SignonPage: { screen: SignonPage },
     UpdatePage: {screen: UpdatePage},
     SideBar: {screen: SideBar},
     LostPage: {screen: LostPage, navigationOptions: {
@@ -50,7 +41,7 @@ const navigator = createStackNavigator(
     }},
   },
   {
-    initialRouteName: "Login"
+    initialRouteName: "LoginPage"
   }
 );
 

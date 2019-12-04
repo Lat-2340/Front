@@ -1,6 +1,6 @@
-import React, { Component } from "react"
+import React from "react"
 import Home from "../home/home.js"
-import UpdatePage from "../update/update.js"
+import UpdatePage from "../user/update.js"
 import SideBar from "../sidebar/sidebar.js"
 import { createDrawerNavigator } from "react-navigation-drawer";
 
