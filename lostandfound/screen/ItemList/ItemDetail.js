@@ -19,7 +19,7 @@ const deviceWidth = Dimensions.get("window").width;
 
 class NHCardShowcase extends Component {
   render() {
-    const matchedItem = this.props.navigation.state.params.matchedItems;
+    const matchItem = this.props.navigation.state.params.matchItems;
 
     return (
       <Container style={styles.container}>
@@ -40,8 +40,8 @@ class NHCardShowcase extends Component {
             <CardItem bordered>
               <Left>
                 <Body>
-                  <Text>{matchedItem['item_name']}</Text>
-                  {/* <Text note>{matchedItem['date_time']['$date']}</Text> */}
+                  <Text>{matchItem['item_name']}</Text>
+                  {/* <Text note>{matchItem['date_time']['$date']}</Text> */}
                 </Body>
               </Left>
             </CardItem>
@@ -57,10 +57,10 @@ class NHCardShowcase extends Component {
                     width: deviceWidth / 1.18,
                     marginVertical: 5
                   }}
-                  source={{uri: matchedItem.img}}
+                  source={{uri: matchItem.img}}
                 />
                 <Text>
-                  {matchedItem.description}
+                  {matchItem.description}
                 </Text>
               </Body>
             </CardItem>
