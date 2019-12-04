@@ -35,7 +35,7 @@ export default class Lost extends Component {
 
     this.data = {
       "is_lost": true,
-      "description":{},
+      "description": "",
       "features":{}
 
     }
@@ -99,28 +99,6 @@ export default class Lost extends Component {
     //console.log(this.data)
   }
 
-//   handlePress = async () => {
-//     this.data["location_lat"] = 99.0
-//     this.data["location_long"] = 65.1
-
-//     console.log(this.data);
-//     try {
-//     const response = await fetch(url, {
-//         method: 'POST',
-//         headers: {
-//           'Content-Type': 'application/json',
-//           "Authorization": "Token " + Login.getToken()
-//         },
-//         body: JSON.stringify(this.data),
-//     })
-//     const result = await response.json();
-//     console.log('Success:', JSON.stringify(result));
-//     this.props.navigation.navigate("HomePage");
-//   } catch (error) {
-//     console.error('Error:', error.text());
-//   }
-// }
-
   handlePress = async () => {
     var formData = new FormData();
     formData.append("is_lost",this.data["is_lost"]);
@@ -131,7 +109,7 @@ export default class Lost extends Component {
       formData.append("item_name", this.data["item_name"]);
     }
     console.log(JSON.stringify(this.data["description"]))
-    formData.append("description",JSON.stringify(this.data["description"]));
+    formData.append("description", this.data["description"]);
 
     formData.append("features",JSON.stringify(this.data["features"]));
     if(this.data.hasOwnProperty("image")){
@@ -156,22 +134,6 @@ export default class Lost extends Component {
     console.error('Error:', error);
   }
 }
-
-// static navigationOptions = {
-//       header: (
-//       <Header>
-//         <Left>
-//           {/* <Button transparent onPress={() => this.props.navigation.navigate("DrawerOpen")}>
-//             <Icon name="menu" />
-//           </Button> */}
-//         </Left>
-//         <Body>
-//           <Title>Lost</Title>
-//         </Body>
-//         <Right />
-//       </Header>
-//       )
-//     }
 
   render() {
     //const { navigate } = this.props.navigation;
