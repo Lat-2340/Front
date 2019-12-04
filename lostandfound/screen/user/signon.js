@@ -76,7 +76,7 @@ export default class Signon extends Component {
         if (response.status == 201){
           console.log("Signon Success!");
           console.log(content);
-          this.props.navigation.navigate("Login");
+          this.props.navigation.navigate("LoginPage");
         }
         else{
           console.error("Invalid Input!")

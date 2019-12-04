@@ -22,7 +22,7 @@ routes = [
   },
   {
     pageName:"Log Out",
-    pageRoute:"Login"
+    pageRoute:"LoginPage"
   }
 ]
 export default class SideBar extends React.Component {

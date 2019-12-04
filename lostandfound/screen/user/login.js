@@ -197,7 +197,7 @@ export default class Login extends Component {
             <Text>Sign In</Text>
           </Button>
           <Button block bordered primary style={styles.button}
-          onPress={() => this.props.navigation.navigate("Signon")}>
+          onPress={() => this.props.navigation.navigate("SignonPage")}>
             <Text>Sign On</Text>
           </Button>
           {/* <Button block transparent style={styles.button}>
