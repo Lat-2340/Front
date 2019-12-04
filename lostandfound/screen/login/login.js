@@ -168,19 +168,19 @@ export default class Login extends Component {
         <View>
           <View>
           <Image
-              source={{
-                uri:
-                  "./icon.png"
-              }}
-              style={{
-                height: 50,
-                width: 50,
-                alignSelf: "stretch",
-                position: "absolute"
-              }}
-            />
-            </View>
-          <Form>
+            source={
+              require('../../picture/icon.jpg')
+            }
+            style={{
+              marginTop: 30,
+              height: 120,
+              width: 120,
+              alignSelf: "center",
+              position: "absolute"
+            }}
+          />
+          </View>
+          <Form style={{alignItems: 'center',justifyContent: 'center', marginTop: 150}}>
             <Item floatingLabel>
               <Label>Username</Label>
               <Input onChangeText={text => this.onChangeText("username", text)}/>

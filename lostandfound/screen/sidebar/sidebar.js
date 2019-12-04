@@ -26,36 +26,28 @@ routes = [
   }
 ]
 export default class SideBar extends React.Component {
+
   render() {
+    let icons;
+    
+    
     return (
       <Container>
         <Content>
-          {/* <Image
-            source={{
-              uri:
-                "https://raw.githubusercontent.com/GeekyAnts/NativeBase-KitchenSink/master/assets/drawer-cover.png"
-            }}
+          <Image
+            source={
+              require('../../picture/icon.jpg')
+            }
             style={{
-              height: 120,
-              width: "100%",
-              alignSelf: "stretch",
+              marginTop: 20,
+              left: 10,
+              height: 80,
+              width: 80,
+              alignSelf: "strench",
               position: "absolute"
             }}
-          /> */}
-          {/* <Image
-            square
-            style={{
-              height: 80,
-              width: 70,
-              position: "absolute",
-              alignSelf: "center",
-              top: 20
-            }}
-            source={{
-              uri:
-                "https://raw.githubusercontent.com/GeekyAnts/NativeBase-KitchenSink/master/assets/logo.png"
-            }}
-          /> */}
+          />
+          
           <List
             dataArray={routes}
             contentContainerStyle={{ marginTop: 120 }}
