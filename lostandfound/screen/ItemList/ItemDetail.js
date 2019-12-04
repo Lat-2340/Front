@@ -36,12 +36,10 @@ class NHCardShowcase extends Component {
       })
 
       if (response.status != 204) {
-        Alert.alert("Failed to delete lost item.")
+        Alert.alert("Failed to delete found item.")
         console.error(response)
         return
       }
-
-      console.log("deleted found item")
 
       matchCallback = this.props.navigation.state.params.matchHandler
       matchCallback(lostItemId)
@@ -49,7 +47,7 @@ class NHCardShowcase extends Component {
       this.props.navigation.navigate("ItemListPage")
 
     } catch (error) {
-      Alert.alert(error);
+      Alert.alert("deleteMatchItem failed");
       console.error(error);
     }
   }
@@ -69,7 +67,7 @@ class NHCardShowcase extends Component {
             </Button>
           </Left>
           <Body>
-            <Title>Detail</Title>
+            <Title>Found Detail</Title>
           </Body>
           <Right />
         </Header>

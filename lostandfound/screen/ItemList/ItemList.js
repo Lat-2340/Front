@@ -74,7 +74,7 @@ class NHListThumbnail extends Component {
       // console.log(this.state.lostItems)
 
     } catch (error) {
-      Alert.alert(error);
+      Alert.alert("Failed to delete lost item.");
       console.error(error);
     }
   }
@@ -112,7 +112,7 @@ class NHListThumbnail extends Component {
       })
 
     } catch (error) {
-      Alert.alert(error);
+      Alert.alert("Failed to fetch lost items.");
       console.error(error);
     }
   }
@@ -156,7 +156,7 @@ class NHListThumbnail extends Component {
       // console.log(this.state.matchFoundItems)
 
     } catch (error) {
-      Alert.alert(error);
+      Alert.alert("Failed to fetch matched found items.");
       console.error(error);
     }
   }
@@ -175,7 +175,7 @@ class NHListThumbnail extends Component {
             </Button>
           </Left>
           <Body>
-            <Title>Item status</Title>
+            <Title>Lost Status</Title>
           </Body>
           <Right />
         </Header>
