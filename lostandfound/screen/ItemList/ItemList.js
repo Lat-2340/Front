@@ -41,9 +41,8 @@ class NHListThumbnail extends Component {
     this.state = {
       showToast: false,
       lostItems: [],
-      matchedFoundItems: {},
+      matchFoundItems: {},
     };
-
   }
 
   deleteItem = async (itemId) => {
@@ -100,10 +99,10 @@ class NHListThumbnail extends Component {
         lostItems: resLostItems
       })
 
-      // console.log(this.state.lostItems)
+      console.log(this.state.lostItems)
 
       this.state.lostItems.forEach(item => {
-        this.fetchMatchedFoundItems(item['_id']['$oid'])
+        this.fetchmatchFoundItems(item)
       })
 
     } catch (error) {
@@ -112,9 +111,10 @@ class NHListThumbnail extends Component {
     }
   }
 
-  fetchMatchedFoundItems = async (itemId) => {
+  fetchmatchFoundItems = async (lostItem) => {
     try {
-      url = GET_MATCHED_FOUND_ITEMS_URL + "?id=" + itemId
+      lostItemId = lostItem['_id']['$oid']
+      url = GET_MATCHED_FOUND_ITEMS_URL + "?id=" + lostItemId
       const response = await fetch(url, {
         method: 'GET',
         headers: {
@@ -130,18 +130,24 @@ class NHListThumbnail extends Component {
 
       const result = await response.json();
 
-      matchedItems = result['matched_items'].map(itemInfo => JSON.parse(itemInfo))
-      result['matched_images'].forEach((img, i) => {
-        matchedItems[i]['img'] = 'data:image/png;base64,' + img
+      matchItems = result['match_items'].map((item) => {
+        item = JSON.parse(item)
+        itemId = item['_id']['$oid']
+        item['match_score'] = lostItem['match_info'].find(x => x[1] === itemId)[0]
+        return item
+      })
+
+      result['match_images'].forEach((img, i) => {
+        matchItems[i]['img'] = 'data:image/png;base64,' + img
       });
 
       this.setState((state) => {
-        state.matchedFoundItems[itemId] = matchedItems
+        state.matchFoundItems[lostItemId] = matchItems
         return {
-          matchedFoundItems: state.matchedFoundItems
+          matchFoundItems: state.matchFoundItems
         };
       })
-      // console.log(this.state.matchedFoundItems)
+      // console.log(this.state.matchFoundItems)
 
     } catch (error) {
       Alert.alert(error);
@@ -184,22 +190,29 @@ class NHListThumbnail extends Component {
                   </Text>
                 </ListItem>
                 <List
-                  dataArray={this.state.matchedFoundItems[lostItem['_id']['$oid']]}
-                  renderRow={matchedItems =>
+                  dataArray={this.state.matchFoundItems[lostItem['_id']['$oid']]}
+                  renderRow={matchItems =>
                     <ListItem thumbnail>
                       <Left>
-                        <Thumbnail square source={{uri: matchedItems.img}} />
+                        <Thumbnail square source={{uri: matchItems.img}} />
                       </Left>
                       <Body>
-                        <Text>
-                          {matchedItems.item_name}
+                        <Text
+                          style={{ fontWeight: 'bold' }}
+                        >
+                          {matchItems.item_name}
+                        </Text>
+                        <Text
+                          style={{ fontStyle: 'italic' }}
+                        >
+                          Match Score: {matchItems.match_score}
                         </Text>
                         <Text numberOfLines={1} note>
-                          {matchedItems.description}
+                          {matchItems.description}
                         </Text>
                       </Body>
                       <Right>
-                        <Button transparent onPress={() => this.props.navigation.navigate("ItemDetailPage", { matchedItems })}>
+                        <Button transparent onPress={() => this.props.navigation.navigate("ItemDetailPage", { matchItems })}>
                           <Text>Detail</Text>
                         </Button>
                       </Right>
