@@ -26,11 +26,13 @@ import {
   IP_PORT,
   LOST_AND_FOUND,
   GET_USER_LOST_ITEMS,
-  GET_MATCHED_FOUND_ITEMS
+  GET_MATCHED_FOUND_ITEMS,
+  DELETE_ITEM,
 } from '../../const.js';
 
 const GET_LOST_ITEMS_URL = IP_PORT + LOST_AND_FOUND + GET_USER_LOST_ITEMS
 const GET_MATCHED_FOUND_ITEMS_URL = IP_PORT + LOST_AND_FOUND + GET_MATCHED_FOUND_ITEMS
+const DELETE_ITEM_URL = IP_PORT + LOST_AND_FOUND + DELETE_ITEM
 
 
 class NHListThumbnail extends Component {
@@ -44,8 +46,32 @@ class NHListThumbnail extends Component {
 
   }
 
-  onPressDelete = async () => {
+  deleteItem = async (itemId) => {
+    try {
+      const response = await fetch(DELETE_ITEM_URL, {
+        method: 'DELETE',
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Token " + Login.getToken()
+        },
+        body: JSON.stringify({id: itemId})
+      })
 
+      if (response.status != 204) {
+        Alert.alert("Failed to delete lost item.")
+        console.error(response)
+        return
+      }
+
+      this.setState((state) => ({
+        lostItems: state.lostItems.filter(item => item['_id']['$oid'] !== itemId)
+      }))
+      // console.log(this.state.lostItems)
+
+    } catch (error) {
+      Alert.alert(error);
+      console.error(error);
+    }
   }
 
   fetchLostItems = async () => {
@@ -183,7 +209,7 @@ class NHListThumbnail extends Component {
                   block
                   danger
                   style={{ margin: 10 }}
-                  onPress={this.onPressDelete}
+                  onPress={() => this.deleteItem(lostItem['_id']['$oid'])}
                 >
                   <Icon active name="trash" />
                   <Text>Already found this item? Delete it now.</Text>
