@@ -9,3 +9,7 @@ export const PICKUP_LOCATIONS = "pickup-locations"
 export const UPDATE = "update/"
 export const LOGIN = "login"
 export const SIGNON = "register"
+
+export const GET_LOST_ITEMS_URL = IP_PORT + LOST_AND_FOUND + GET_USER_LOST_ITEMS
+export const GET_MATCHED_FOUND_ITEMS_URL = IP_PORT + LOST_AND_FOUND + GET_MATCHED_FOUND_ITEMS
+export const DELETE_ITEM_URL = IP_PORT + LOST_AND_FOUND + DELETE_ITEM
