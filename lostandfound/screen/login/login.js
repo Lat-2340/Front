@@ -18,9 +18,8 @@ import {
 import {
   StyleSheet,
   View,
-  AppRegistry, 
   Alert,
-  Image
+  Image,
 } from 'react-native';
 import {createStackNavigator} from "react-navigation-stack";
 
@@ -102,17 +101,17 @@ export default class Login extends Component {
           },
           body: JSON.stringify(this.data),
       })
-      let content = await response.json();
-      console.log(content);
-      console.log(response.status);
+
       if (response.status == 200){
+        let content = await response.json();
         token = content.token;
 
         this.fetchPickUpLoc();
         this.props.navigation.navigate("HomePage");
       }
       else{
-        console.error("Invalid Input!")
+        Alert.alert("Invalid login credentials.")
+        console.error(response)
       }
     } catch (error) {
       console.error('Error:', error);

@@ -29,8 +29,8 @@ export default class SideBar extends React.Component {
 
   render() {
     let icons;
-    
-    
+
+
     return (
       <Container>
         <Content>
@@ -43,11 +43,11 @@ export default class SideBar extends React.Component {
               left: 10,
               height: 80,
               width: 80,
-              // alignSelf: "strench",
+              alignSelf: "stretch",
               position: "absolute"
             }}
           />
-          
+
           <List
             dataArray={routes}
             contentContainerStyle={{ marginTop: 120 }}

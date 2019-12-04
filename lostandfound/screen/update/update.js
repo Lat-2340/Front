@@ -50,7 +50,7 @@ export default class Update extends Component {
       this.changedData = {};
     }
 
-    
+
     onValueChange(value: string) {
       this.setState({ org: value});
       this.changedData["org"] = value;
@@ -113,7 +113,7 @@ export default class Update extends Component {
       name = Login.getName();
       user_url = UPDATE_URL+name;
       this.fetchUserData();
-      
+
   }
     postUpdate = async () => {
       try {
@@ -125,8 +125,14 @@ export default class Update extends Component {
             },
             body: JSON.stringify(this.changedData),
         })
-        const result = await response.json();
-        console.log(result)
+
+        if (response.status != 200) {
+          Alert.alert("Failed to update user profile.")
+          console.error(response)
+          return
+        }
+        // const result = await response.json();
+        // console.log(result)
         this.navigateToLogin()
       } catch (error) {
         console.error('Error:', error);
@@ -166,7 +172,7 @@ export default class Update extends Component {
               <Input onChangeText={text => this.onTextChange("phone_number", text)}/>
             </Item>
             <Item floatingLabel last>
-              <Label>Email</Label>
+              <Label>Email *</Label>
               <Input onChangeText={text => this.onTextChange("email", text)}/>
             </Item>
 
@@ -189,14 +195,14 @@ export default class Update extends Component {
               </Picker>
             </Item>
 
-            <Item floatingLabel last>
+            {/* <Item floatingLabel last>
               <Label>Password *</Label>
               <Input  onChangeText={text => this.combinedChange("password", text)}/>
             </Item>
             <Item floatingLabel last>
               <Label>Confirm Password *</Label>
               <Input secureTextEntry />
-            </Item>
+            </Item> */}
           </Form>
         </View>
         <View style={{alignItems: 'center',justifyContent: 'center', marginTop: 50}}>

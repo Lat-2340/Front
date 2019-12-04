@@ -43,6 +43,12 @@ class NHListThumbnail extends Component {
       lostItems: [],
       matchFoundItems: {},
     };
+
+    this.deleteItemOnMatch = this.deleteItemOnMatch.bind(this)
+  }
+
+  deleteItemOnMatch = (itemId) => {
+    this.deleteItem(itemId)
   }
 
   deleteItem = async (itemId) => {
@@ -68,7 +74,7 @@ class NHListThumbnail extends Component {
       // console.log(this.state.lostItems)
 
     } catch (error) {
-      Alert.alert(error);
+      Alert.alert("Failed to delete lost item.");
       console.error(error);
     }
   }
@@ -98,20 +104,19 @@ class NHListThumbnail extends Component {
       this.setState({
         lostItems: resLostItems
       })
-
-      console.log(this.state.lostItems)
+      // console.log(this.state.lostItems)
 
       this.state.lostItems.forEach(item => {
-        this.fetchmatchFoundItems(item)
+        this.fetchMatchFoundItems(item)
       })
 
     } catch (error) {
-      Alert.alert(error);
+      Alert.alert("Failed to fetch lost items.");
       console.error(error);
     }
   }
 
-  fetchmatchFoundItems = async (lostItem) => {
+  fetchMatchFoundItems = async (lostItem) => {
     try {
       lostItemId = lostItem['_id']['$oid']
       url = GET_MATCHED_FOUND_ITEMS_URL + "?id=" + lostItemId
@@ -150,7 +155,7 @@ class NHListThumbnail extends Component {
       // console.log(this.state.matchFoundItems)
 
     } catch (error) {
-      Alert.alert(error);
+      Alert.alert("Failed to fetch matched found items.");
       console.error(error);
     }
   }
@@ -169,7 +174,7 @@ class NHListThumbnail extends Component {
             </Button>
           </Left>
           <Body>
-            <Title>Item status</Title>
+            <Title>Lost Status</Title>
           </Body>
           <Right />
         </Header>
@@ -212,7 +217,14 @@ class NHListThumbnail extends Component {
                         </Text>
                       </Body>
                       <Right>
-                        <Button transparent onPress={() => this.props.navigation.navigate("ItemDetailPage", { matchItems })}>
+                        <Button transparent onPress={() => this.props.navigation.navigate(
+                          "ItemDetailPage",
+                          {
+                            matchItem: matchItems,
+                            lostItemId: lostItem['_id']['$oid'],
+                            matchHandler: this.deleteItemOnMatch
+                          }
+                        )}>
                           <Text>Detail</Text>
                         </Button>
                       </Right>
@@ -227,7 +239,10 @@ class NHListThumbnail extends Component {
                   <Icon active name="trash" />
                   <Text>Already found this item? Delete it now.</Text>
                 </Button>
-              </List>}
+              </List>
+            }
+
+          keyExtractor={(data,index) => index.toString()}
           />
         </Content>
       </Container>
