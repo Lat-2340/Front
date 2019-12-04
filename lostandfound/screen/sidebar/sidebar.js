@@ -43,7 +43,7 @@ export default class SideBar extends React.Component {
               left: 10,
               height: 80,
               width: 80,
-              alignSelf: "strench",
+              // alignSelf: "strench",
               position: "absolute"
             }}
           />
@@ -61,6 +61,7 @@ export default class SideBar extends React.Component {
                 </ListItem>
               );
             }}
+            keyExtractor={(data,index) => index.toString()}
           />
         </Content>
       </Container>
