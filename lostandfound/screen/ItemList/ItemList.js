@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import {
   Container,
   Header,
@@ -13,7 +13,7 @@ import {
   Left,
   Body,
   Right,
-} from "native-base";
+} from 'native-base';
 import {
   StyleSheet,
   Image,
@@ -173,7 +173,7 @@ class NHListThumbnail extends Component {
                         </Text>
                       </Body>
                       <Right>
-                        <Button transparent onPress={() => this.props.navigation.navigate("DetailPage", { matchedItems })}>
+                        <Button transparent onPress={() => this.props.navigation.navigate("ItemDetailPage", { matchedItems })}>
                           <Text>Detail</Text>
                         </Button>
                       </Right>

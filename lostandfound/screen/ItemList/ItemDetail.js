@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { Image, Dimensions, StyleSheet } from "react-native";
+import React, { Component } from 'react';
+import { Image, Dimensions, StyleSheet } from 'react-native';
 import {
   Container,
   Header,
@@ -10,15 +10,12 @@ import {
   Card,
   CardItem,
   Text,
-  Thumbnail,
   Left,
   Right,
   Body
-} from "native-base";
+} from 'native-base';
 
 const deviceWidth = Dimensions.get("window").width;
-const logo = require("./test.jpg");
-const cardImage = require("./test.jpg");
 
 class NHCardShowcase extends Component {
   render() {
@@ -44,7 +41,7 @@ class NHCardShowcase extends Component {
               <Left>
                 <Body>
                   <Text>{matchedItem['item_name']}</Text>
-                  <Text note>{matchedItem['date_time']['$date']}</Text>
+                  {/* <Text note>{matchedItem['date_time']['$date']}</Text> */}
                 </Body>
               </Left>
             </CardItem>
