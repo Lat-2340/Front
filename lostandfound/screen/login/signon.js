@@ -22,7 +22,14 @@ import {
 } from 'react-native';
 import {createStackNavigator} from "react-navigation-stack";
 
-const url = "http://127.0.0.1:8000/users/register";
+import {
+  IP_PORT,
+  USERS,
+  SIGNON
+} from '../../const.js';
+
+const SIGNON_URL = IP_PORT + USERS + SIGNON
+// const url = "http://127.0.0.1:8000/users/register";
 // this.data = {
 //   username: 'example',
 //   email: "ex@ex.com" ,
@@ -57,7 +64,7 @@ export default class Signon extends Component {
     postRegister = async () => {
       console.log(this.data)
       try {
-        const response = await fetch(url, {
+        const response = await fetch(SIGNON_URL, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

@@ -20,7 +20,14 @@ import {
 
 import MyDatepicker from './datepicker.js'
 import Login from "../login/login.js"
-const url =  "http://127.0.0.1:8000/lostandfound/add-item";
+
+import {
+  IP_PORT,
+  LOST_AND_FOUND,
+  ADD_ITEM,
+} from '../../const.js';
+// const url =  "http://127.0.0.1:8000/lostandfound/add-item";
+const ADD_ITEM_URL = IP_PORT + LOST_AND_FOUND + ADD_ITEM
 
 export default class Lost extends Component {
   constructor(props) {
@@ -119,7 +126,7 @@ export default class Lost extends Component {
 
     // console.log(this.data);
     try {
-    const response = await fetch(url, {
+    const response = await fetch(ADD_ITEM_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'multipart/form-data',

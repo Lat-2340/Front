@@ -9,7 +9,22 @@ import {
   Content,
   Icon
 } from "native-base";
-const routes = ["HomePage", "UpdatePage"];
+// const routes = ["HomePage", "UpdatePage", "Login"];
+
+routes = [
+  {
+    pageName:"Home Page",
+    pageRoute:"HomePage"
+  },
+  {
+    pageName:"Update Profile",
+    pageRoute:"UpdatePage"
+  },
+  {
+    pageName:"Log Out",
+    pageRoute:"Login"
+  }
+]
 export default class SideBar extends React.Component {
   render() {
     return (
@@ -48,9 +63,9 @@ export default class SideBar extends React.Component {
               return (
                 <ListItem
                   button
-                  onPress={() => this.props.navigation.navigate(data)}
+                  onPress={() => this.props.navigation.navigate(data["pageRoute"])}
                 >
-                  <Text>{data}</Text>
+                  <Text>{data["pageName"]}</Text>
                 </ListItem>
               );
             }}

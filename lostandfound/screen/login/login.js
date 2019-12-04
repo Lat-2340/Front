@@ -18,12 +18,24 @@ import {
 import {
   StyleSheet,
   View,
-  AppRegistry, Alert
+  AppRegistry, 
+  Alert,
+  Image
 } from 'react-native';
 import {createStackNavigator} from "react-navigation-stack";
 
-const url = "http://127.0.0.1:8000/users/login";
-const pickup_url =  "http://127.0.0.1:8000/users/pickup-locations";
+import {
+  IP_PORT,
+  USERS,
+  LOST_AND_FOUND,
+  LOGIN,
+  PICKUP_LOCATIONS
+} from '../../const.js';
+
+// const url = "http://127.0.0.1:8000/users/login";
+const LOGIN_URL = IP_PORT + USERS + LOGIN
+// const pickup_url =  "http://127.0.0.1:8000/users/pickup-locations";
+const PICKUP_LOCATIONS_URL = IP_PORT + USERS + PICKUP_LOCATIONS
 
 // export const user_token = this.token
 
@@ -54,7 +66,7 @@ export default class Login extends Component {
   fetchPickUpLoc = async() => {
     //console.log(token)
     try {
-      const response = await fetch(pickup_url, {
+      const response = await fetch(PICKUP_LOCATIONS_URL, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -83,7 +95,7 @@ export default class Login extends Component {
     name = this.data["username"];
     console.log("postRegistration")
     try {
-      const response = await fetch(url, {
+      const response = await fetch(LOGIN_URL, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -154,6 +166,20 @@ export default class Login extends Component {
         </Header> */}
 
         <View>
+          <View>
+          <Image
+              source={{
+                uri:
+                  "./icon.png"
+              }}
+              style={{
+                height: 50,
+                width: 50,
+                alignSelf: "stretch",
+                position: "absolute"
+              }}
+            />
+            </View>
           <Form>
             <Item floatingLabel>
               <Label>Username</Label>
