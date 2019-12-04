@@ -24,7 +24,8 @@ import {
 import {
   IP_PORT,
   USERS,
-  SIGNON
+  SIGNON,
+  GET_ORG
 } from '../../const.js';
 
 const SIGNON_URL = IP_PORT + USERS + SIGNON
@@ -42,14 +43,15 @@ export default class Signon extends Component {
       super(props);
       this.state = {
         org: undefined,
+        userOrg: [],
       };
       this.data = {};
     }
 
-    onValueChange(value: string) {
-      this.setState({org:value});
-      this.data["org"] = value;
-    }
+    // onValueChange(value: string) {
+    //   this.setState({org:value});
+    //   this.data["org"] = value;
+    // }
 
     onChangeText(key:string, value:string){
       this.data[key] = value;
@@ -86,8 +88,59 @@ export default class Signon extends Component {
       }
     }
 
+    fetchOrg = async() => {
+    //console.log(token)
+      try {
+        const response = await fetch(GET_ORG, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+        })
+        let content = await response.json();
+        console.log(content)
+        if (response.status == 200){
+          var orgs;
+          for (index in content){
+            console.log(index)
+            let arr = this.state.userOrg;
+            arr.push(content[index].orgname);
+            this.setState({userOrg: arr});
+            //this.pickUpLocArr.push(content[index].office)
+          }
+          // TODO: empty location
+          console.log("show orgs");
+          console.log(this.state.userOrg)
+          // this.pickUpLocArr = content;
+        }
+        else{
+          console.error("Something wrong!")
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+
+    componentWillMount() {
+      this.fetchOrg();
+    }
+
+    onChangeOrg(value: string) {
+      console.log("org state")
+      this.setState({org: value});
+      this.data["org"] = value;
+      console.log("loc:")
+      console.log(this.data)
+    }
+
 
   render() {
+    console.log("display in render")
+    console.log(this.state.userOrg)
+    let orgItems = this.state.userOrg.map( (s) => {
+      return <Picker.Item key={1} value={s} label={s} />
+    });
+
     return (
       <Container style={styles.container}>
         <View>
@@ -114,13 +167,9 @@ export default class Signon extends Component {
                 placeholderStyle={{ color: "#bfc6ea" }}
                 placeholderIconColor="#007aff"
                 selectedValue={this.state.org}
-                onValueChange={(label)=> this.onValueChange(label)}
+                onValueChange={(label, value)=> this.onChangeOrg(label)}
               >
-                <Item label="Undergrad" value="Undergrad" />
-                <Item label="Stats" value="Stats" />
-                <Item label="Physics" value="Physics" />
-                <Item label="ECE" value="ECE" />
-                <Item label="CS" value="CS" />
+                {orgItems}
               </Picker>
             </Item>
 
