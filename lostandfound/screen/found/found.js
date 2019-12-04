@@ -43,8 +43,8 @@ export default class Lost extends React.Component {
       color: undefined,
       size: undefined,
       category: undefined,
-      dropoffLoc: undefined,
       pickUpLocArr: [],
+      locChosen: undefined,
       image: undefined,
       isCameraVisiable: false
     };
@@ -179,7 +179,8 @@ export default class Lost extends React.Component {
     if(this.data.hasOwnProperty("image")){
       formData.append("image",this.data["image"]);
     }
-
+    
+    console.log(formData);
     try {
     const response = await fetch(ADD_ITEM_URL, {
         method: 'POST',
@@ -213,8 +214,11 @@ export default class Lost extends React.Component {
   }
 
   onChangePickup(value: string) {
+    console.log("eee")
+    this.setState({locChosen: value});
     this.data["pickup_address"]= value
-    //console.log(this.data)
+    console.log("loc:")
+    console.log(this.data)
   }
 
   onChangeDescription(value: string) {
@@ -293,8 +297,8 @@ export default class Lost extends React.Component {
               style={{ width: 220, paddingLeft:4, borderBottomWidth: 1, borderLeftWidth:1, borderRightWidth:1, borderTopWidth:1, borderColor:"lightslategrey", backgroundColor:"lightslategrey"}}
               placeholder="Drop-off place"
               placeholderStyle={{color: 'white', paddingLeft:4}}
-              selectedValue={this.state.dropoffLoc}
-              onValueChange={(label)=> this.onChangePickup("dropoffLocation", label)}
+              selectedValue={this.state.locChosen}
+              onValueChange={(label, value)=> this.onChangePickup(label)}
             >
               {locationItems}
             </Picker>
