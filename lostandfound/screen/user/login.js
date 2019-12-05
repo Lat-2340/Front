@@ -87,6 +87,7 @@ export default class Login extends Component {
       if (response.status == 200) {
         let content = await response.json();
         token = content.token;
+        name = this.state.username
 
         this.fetchPickUpLocations();
         this.props.navigation.navigate("HomePage");
