@@ -56,7 +56,10 @@ class NHCardShowcase extends Component {
     const matchItem = this.props.navigation.state.params.matchItem;
     const lostItemId = this.props.navigation.state.params.lostItemId;
 
-    console.log(matchItem)
+    let pickupAddress = "Unknown"
+    if (matchItem.hasOwnProperty('pickup_address')) {
+      pickupAddress =  JSON.parse(matchItem.pickup_address).address
+    }
 
     return (
       <Container style={styles.container}>
@@ -108,15 +111,23 @@ class NHCardShowcase extends Component {
           </Card>
 
           <Card style={styles.mb}>
+            <CardItem header bordered>
+              <Title
+                style={{
+                  textAlign: 'left',
+                }}
+              >
+                Pickup Location
+              </Title>
+            </CardItem>
             <CardItem bordered>
-              <Left>
-                <Title>
-                  Pickup Location
-                </Title>
-                <Text>
-                  {matchItem.pickup_address}
-                </Text>
-              </Left>
+              <Text
+                style={{
+                  textAlign: 'left',
+                }}
+              >
+                {pickupAddress}
+              </Text>
             </CardItem>
           </Card>
 

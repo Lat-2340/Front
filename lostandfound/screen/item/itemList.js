@@ -194,13 +194,24 @@ class NHListThumbnail extends Component {
                     {lostItem.item_name}
                   </Text>
                 </ListItem>
+
+                <Button
+                  block
+                  danger
+                  style={{ margin: 10 }}
+                  onPress={() => this.deleteItem(lostItem['_id']['$oid'])}
+                >
+                  <Icon active name="trash" />
+                  <Text>Already found this item? Delete it now.</Text>
+                </Button>
+
                 <List
                   dataArray={this.state.matchFoundItems[lostItem['_id']['$oid']]}
                   renderRow={matchItems =>
                     <ListItem thumbnail>
-                      <Left>
-                        <Thumbnail square source={{uri: matchItems.img}} />
-                      </Left>
+                        <Left>
+                          <Thumbnail square source={{uri: matchItems.img}} />
+                        </Left>
                       <Body>
                         <Text
                           style={{ fontWeight: 'bold' }}
@@ -230,15 +241,6 @@ class NHListThumbnail extends Component {
                       </Right>
                     </ListItem>}
                 />
-                <Button
-                  block
-                  danger
-                  style={{ margin: 10 }}
-                  onPress={() => this.deleteItem(lostItem['_id']['$oid'])}
-                >
-                  <Icon active name="trash" />
-                  <Text>Already found this item? Delete it now.</Text>
-                </Button>
               </List>
             }
 
