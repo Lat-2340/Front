@@ -39,18 +39,23 @@ export default class Lost extends React.Component {
       date_time: undefined,
       image: undefined,
       pickup_address: undefined,
+
       animating: false,
+      isCameraVisible: false,
     }
 
-    this.isCameraVisible = false
   }
 
   showCameraView = () => {
-    this.isCameraVisible = true
+    this.setState({
+      isCameraVisible: true
+    })
   }
 
   closeCameraView = () => {
-    this.sCameraVisible = false
+    this.setState({
+      isCameraVisible: false
+    })
 
     this.props.navigation.navigate("CameraPage", {
       image: null,
@@ -66,14 +71,18 @@ export default class Lost extends React.Component {
 
   submitForm = async () => {
     this.setState({
-        animating: true
-      });
+      animating: true
+    })
+
     var formData = new FormData()
     formData.append("is_lost", "") // is_lost is empty string <=> false for found items
 
     Object.keys(this.state).forEach(key => {
       let val = this.state[key]
-      if (this.state.hasOwnProperty(key) && val !== undefined) {
+      if (this.state.hasOwnProperty(key) &&
+        key !== "animating" && key !== "isCameraVisible" &&
+        val !== undefined
+      ) {
         if (typeof(val) === 'object') {
           val = JSON.stringify(val)
         }
@@ -133,7 +142,7 @@ export default class Lost extends React.Component {
     })
 
     let cam_bnt
-    if (this.isCameraVisible) {
+    if (this.state.isCameraVisible) {
       cam_bnt = <Button title="Camera" onPress={this.showCameraView}>
         <Icon name='camera' />
       </Button>
