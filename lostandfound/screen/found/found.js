@@ -1,7 +1,5 @@
-import React from "react";
-import { View, StyleSheet } from "react-native";
-//import { NavigationActions } from "react-navigation";
-import { TextInput } from 'react-native';
+import React from "react"
+import { View, Alert, StyleSheet } from "react-native"
 import {
   Button,
   Text,
@@ -16,234 +14,123 @@ import {
   Item,
   Form,
   Picker
-} from "native-base";
+} from "native-base"
 
 import MyDatepicker from './datepicker.js'
 import Login from '../user/login.js'
 
 import {
   IP_PORT,
-  USERS,
   LOST_AND_FOUND,
   ADD_ITEM,
-  PICKUP_LOCATIONS
-} from '../../const.js';
-// import {user_token} from '../user/login.js';
-//const token = Login.token
-// const url =  "http://127.0.0.1:8000/lostandfound/add-item";
+} from '../../const.js'
+
 const ADD_ITEM_URL = IP_PORT + LOST_AND_FOUND + ADD_ITEM
-// const pickup_url = "http://127.0.0.1:8000/users/pickup-locations";
-const PICKUP_LOCATIONS_URL = IP_PORT + USERS + PICKUP_LOCATIONS
 
 
 export default class Lost extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
-      color: undefined,
-      size: undefined,
-      category: undefined,
-      pickUpLocArr: [],
-      locChosen: undefined,
+      item_name: undefined,
+      features: {},
+      location: undefined,
+      description: undefined,
+      date_time: undefined,
       image: undefined,
-      isCameraVisiable: false
-    };
-    this.data = {
-      "description": "",
-      "features":{}
+      pickup_address: undefined,
     }
-  }
 
-  onValueChange(key: string, value: string) {
-
-    if(key == "feature_color")
-      this.setState({color: value});
-    else if(key == "feature_size")
-      this.setState({size: value});
-    else if(key == "feature_category")
-      this.setState({category: value});
-
-    this.data[key] = value;
-    console.log(this.data)
-  }
-
-  onChangeText(key:string, value: string) {
-    this.data[key]= value
-    //console.log(this.data)
-  }
-
-  fetchPickUpLoc = async() => {
-    //console.log(token)
-    try {
-      const response = await fetch(PICKUP_LOCATIONS_URL, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            "Authorization": "Token " + Login.getToken()
-          }
-      })
-      let content = await response.json();
-      console.log(content)
-      if (response.status == 200){
-        var place;
-        for (index in content){
-          console.log(index)
-          let arr = this.state.pickUpLocArr;
-          arr.push(content[index].office);
-          this.setState({pickUpLocArr: arr});
-          //this.pickUpLocArr.push(content[index].office)
-        }
-        // TODO: empty location
-        console.log("show pickuplocation1");
-        console.log(this.state.pickUpLocArr)
-        // this.pickUpLocArr = content;
-      }
-      else{
-        console.error("Something wrong!")
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  }
-
-  componentWillMount() {
-      // this.setState({username: this.data["username"]});
-      // this.setState({password: this.data["password"]});
-      // this.setState({email: this.data["email"]});
-      // this.setState({state: this.data["org"]});
-      // this.setState({phone_number: this.data["phone_number"]})
-      this.fetchPickUpLoc();
+    this.isCameraVisible = false
   }
 
   showCameraView = () => {
-    this.setState({ isCameraVisible: true });
+    this.isCameraVisible = true
   }
 
   closeCameraView = () => {
-    this.setState({ isCameraVisible: false });
-    console.log(this.state.image)
+    this.sCameraVisible = false
+
     this.props.navigation.navigate("CameraPage", {
-          image: null,
-          callback: (data)=>{
-              console.log(data);
-              console.log("???");
-                this.setState({
-                  image:data,
-                });
-                this.data["image"]= data;
-                console.log(this.data);
-                 }
+      image: null,
+      callback: (data) => {
+        this.setState({
+          image: data,
+        })
       }
-       );
-    console.log("back success");
-    console.log(this.state.image);
-    // this.data["image"]= this.state.image;
-    console.log("back success?");
-    console.log(this.data);
+    }
+    )
+    // console.log(this.state.image)
   }
 
-//   handlePress = async () => {
-//     console.log(this.data);
-//     try {
-//     const response = await fetch(url, {
-//         method: 'POST',
-//         headers: {
-//           'Content-Type': 'application/json',
-//           "Authorization": "Token " + Login.getToken()
-//         },
-//         body: JSON.stringify(this.data),
-//     })
-//     const result = await response.json();
-//     console.log('Success:', JSON.stringify(result));
-//     this.props.navigation.navigate("HomePage");
-//   } catch (error) {
-//     console.error('Error:', error);
-//   }
-// }
+  submitForm = async () => {
+    var formData = new FormData()
+    formData.append("is_lost", "") // is_lost is empty string <=> false for found items
 
-  handlePress = async () => {
-    var formData = new FormData();
-    formData.append("is_lost", "");
-    if(this.data.hasOwnProperty("date_time")){
-      formData.append("date_time",this.data["date_time"]);
-    }
-    if(this.data.hasOwnProperty("pickup_address")){
-      formData.append("pickup_address",this.data["pickup_address"]);
-    }
-    if(this.data.hasOwnProperty("item_name")){
-      formData.append("item_name",this.data["item_name"]);
-    }
-    formData.append("description", this.data["description"]);
+    Object.keys(this.state).forEach(key => {
+      let val = this.state[key]
+      if (this.state.hasOwnProperty(key) && val !== undefined) {
+        if (typeof(val) === 'object') {
+          val = JSON.stringify(val)
+        }
+        formData.append(key, val)
+      }
+    })
+    // console.log(formData)
 
-    formData.append("features",JSON.stringify(this.data["features"]));
-    if(this.data.hasOwnProperty("image")){
-      formData.append("image",this.data["image"]);
-    }
-    
-    console.log(formData);
     try {
-    const response = await fetch(ADD_ITEM_URL, {
+      const response = await fetch(ADD_ITEM_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'multipart/form-data',
           "Authorization": "Token " + Login.getToken()
         },
         body: formData,
+      })
+
+      if (response.status == 201) {
+        const result = await response.json()
+        console.log('Success:', result)
+        this.props.navigation.navigate("HomePage")
+      } else {
+        Alert.alert("Failed to add lost item.")
+        // console.error(response)
+      }
+    } catch (error) {
+      console.error('Error:', error)
+    }
+  }
+
+  onChangeState(key, value) {
+    this.setState((state) => {
+      if (key === "features") {
+        let [ k, v ] = value
+        state[key][k] = v
+        return {
+          [key]: state[key]
+        }
+      }
+      return {
+        [key]: value
+      }
     })
-    const result = await response.json();
-    console.log('Success:', JSON.stringify(result));
-    this.props.navigation.navigate("HomePage");
-  } catch (error) {
-    console.error('Error:', error);
   }
-}
-
-  onChangeName(value: string) {
-    this.data["item_name"]= value
-    //console.log(this.data)
-  }
-
-  onChangeLocation(value: string) {
-    this.data["location"]= value
-    //console.log(this.data)
-  }
-
-  onChangeDate(value: string) {
-    this.data["date_time"]= value
-    //console.log(this.data)
-  }
-
-  onChangePickup(value: string) {
-    console.log("eee")
-    this.setState({locChosen: value});
-    this.data["pickup_address"]= value
-    console.log("loc:")
-    console.log(this.data)
-  }
-
-  onChangeDescription(value: string) {
-    this.data["description"]= value
-    //console.log(this.data)
-  }
-
 
   render() {
-    console.log("display in render")
-    console.log(this.state.pickUpLocArr)
-    let locationItems = this.state.pickUpLocArr.map( (s) => {
-      return <Picker.Item key={1} value={s} label={s} />
-    });
+    pickupLocations = Login.getPickUpLocations()
+    let locationItems = pickupLocations.map((loc) => {
+      return <Picker.Item key={1} value={loc} label={loc.address} />
+    })
 
-    const { isCameraVisible } = this.state;
-    let cam_bnt;
-    if (isCameraVisible){
+    let cam_bnt
+    if (this.isCameraVisible) {
       cam_bnt = <Button title="Camera" onPress={this.showCameraView}>
-                  <Icon name='camera' />
-                </Button>;
-    }else{
+        <Icon name='camera' />
+      </Button>
+    } else {
       cam_bnt = <Button title="Camera" onPress={this.closeCameraView}>
-                  <Icon name='camera' />
-                </Button>; ;
+        <Icon name='camera' />
+      </Button>
     }
 
     return (
@@ -263,64 +150,63 @@ export default class Lost extends React.Component {
         <View style={styles.content}>
 
 
-          <Item style={{top:10}}>
+          <Item style={{ top: 10 }}>
             <Icon active name='bulb' />
-            <Text style = {{paddingBottom:2}}> Name this item first: </Text>
+            <Text style={{ paddingBottom: 2 }}> Name this item first: </Text>
           </Item>
-          <Item regular style={{top:20, borderColor: 'gray', width: 250, height:50}}>
-            <Input placeholder='Nickname' onChangeText={text => this.onChangeName(text)}/>
+          <Item regular style={{ top: 20, borderColor: 'gray', width: 250, height: 50 }}>
+            <Input placeholder='Nickname' onChangeText={val => this.onChangeState("item_name", val)} />
           </Item>
 
-          <Item style={{top:30}}>
+          <Item style={{ top: 30 }}>
             <Icon active name='home' />
-            <Text style = {{paddingBottom:2}}> Where did you find this lost item? </Text>
+            <Text style={{ paddingBottom: 2 }}> Where did you find this lost item? </Text>
           </Item>
-          <Item regular style={{top:40, borderColor: 'gray', width: 250, height:50}}>
-            <Input placeholder='Grainger Library' onChangeText={text => this.onChangeLocation(text)}/>
+          <Item regular style={{ top: 40, borderColor: 'gray', width: 250, height: 50 }}>
+            <Input placeholder='Grainger Library' onChangeText={val => this.onChangeState("location", val)} />
           </Item>
 
-          <Item style={{top:55}}>
+          <Item style={{ top: 55 }}>
             <Icon active name='time' />
-            <Text style = {{paddingBottom:2}}> In which day did you find this lost item? </Text>
+            <Text style={{ paddingBottom: 2 }}> In which day did you find this lost item? </Text>
           </Item>
-          <MyDatepicker handler = {date => this.onChangeDate(date)} style={styles.container} />
+          <MyDatepicker handler={date => this.onChangeState("date_time", date)} style={styles.container} />
 
-          <Item style={{top:80}}>
+          <Item style={{ top: 80 }}>
             <Icon active name='ios-checkbox' />
-            <Text style = {{paddingBottom:2}}> Pick one avaliable drop-off location </Text>
+            <Text style={{ paddingBottom: 2 }}> Pick one available drop-off location </Text>
           </Item>
-          <Form style={{top:90}}>
+          <Form style={{ top: 90 }}>
             <Picker
               mode="dropdown"
-              iosHeader="Drop-off place"
-              iosIcon={<Icon name="arrow-dropdown-circle" style={{ color: "white", fontSize: 25}}/>}
-              style={{ width: 220, paddingLeft:4, borderBottomWidth: 1, borderLeftWidth:1, borderRightWidth:1, borderTopWidth:1, borderColor:"lightslategrey", backgroundColor:"lightslategrey"}}
+              iosHeader="Drop-off location"
+              iosIcon={<Icon name="arrow-dropdown-circle" style={{ color: "white", fontSize: 25 }} />}
+              style={{ width: 220, paddingLeft: 4, borderBottomWidth: 1, borderLeftWidth: 1, borderRightWidth: 1, borderTopWidth: 1, borderColor: "lightslategrey", backgroundColor: "lightslategrey" }}
               placeholder="Drop-off place"
-              placeholderStyle={{color: 'white', paddingLeft:4}}
-              selectedValue={this.state.locChosen}
-              onValueChange={(label, value)=> this.onChangePickup(label)}
+              placeholderStyle={{ color: 'white', paddingLeft: 4 }}
+              selectedValue={this.state.pickup_address}
+              onValueChange={(label) => this.onChangeState("pickup_address", label)}
             >
               {locationItems}
             </Picker>
           </Form>
 
 
-
-          <Item style={{top:110}}>
+          <Item style={{ top: 110 }}>
             <Icon active name='ios-add-circle-outline' />
-            <Text style = {{paddingBottom:2}}> Describe your favoriate item </Text>
+            <Text style={{ paddingBottom: 2 }}> Describe your favoriate item </Text>
           </Item>
 
-          <Form style={{top:120, flex: 0.9, flexDirection:"row", justifyContent:'space-between'}}>
+          <Form style={{ top: 120, flex: 0.9, flexDirection: "row", justifyContent: 'space-between' }}>
             <Picker
               mode="dropdown"
               iosHeader="Select Color"
-              iosIcon={<Icon name="arrow-dropdown-circle" style={{ color: "white", fontSize: 25}}/>}
-              style={{ width: 170, paddingLeft:4, borderBottomWidth: 1, borderLeftWidth:1, borderRightWidth:1, borderTopWidth:1, borderColor:"goldenrod", backgroundColor:"goldenrod"}}
+              iosIcon={<Icon name="arrow-dropdown-circle" style={{ color: "white", fontSize: 25 }} />}
+              style={{ width: 170, paddingLeft: 4, borderBottomWidth: 1, borderLeftWidth: 1, borderRightWidth: 1, borderTopWidth: 1, borderColor: "goldenrod", backgroundColor: "goldenrod" }}
               placeholder="Select Color"
-              placeholderStyle={{ color: 'white', paddingLeft:4}}
-              selectedValue={this.state.color}
-              onValueChange={(label, value)=> this.onValueChange("feature_color", label)}
+              placeholderStyle={{ color: 'white', paddingLeft: 4 }}
+              selectedValue={this.state.features.color}
+              onValueChange={(label) => this.onChangeState("features", ["color", label])}
             >
               <Picker.Item label="Black" value="Black" />
               <Picker.Item label="White" value="White" />
@@ -336,12 +222,12 @@ export default class Lost extends React.Component {
             <Picker
               mode="dropdown"
               iosHeader="Select Size"
-              iosIcon={<Icon name="arrow-dropdown-circle" style={{ color: "white", fontSize: 25}}/>}
-              style={{ width: 170, paddingLeft:4, borderBottomWidth: 1, borderLeftWidth:1, borderRightWidth:1, borderTopWidth:1, borderColor:"#007aff", backgroundColor:"#007aff"}}
+              iosIcon={<Icon name="arrow-dropdown-circle" style={{ color: "white", fontSize: 25 }} />}
+              style={{ width: 170, paddingLeft: 4, borderBottomWidth: 1, borderLeftWidth: 1, borderRightWidth: 1, borderTopWidth: 1, borderColor: "#007aff", backgroundColor: "#007aff" }}
               placeholder="Select Size"
-              placeholderStyle={{ color: 'white', paddingLeft:4}}
-              selectedValue={this.state.size}
-              onValueChange={(label, value)=> this.onValueChange("feature_size", label)}
+              placeholderStyle={{ color: 'white', paddingLeft: 4 }}
+              selectedValue={this.state.features.size}
+              onValueChange={(label) => this.onChangeState("features", ["size", label])}
             >
               <Picker.Item label="< 10 cm" value="< 10 cm" />
               <Picker.Item label="< 20 cm" value="< 20 cm" />
@@ -352,16 +238,16 @@ export default class Lost extends React.Component {
             </Picker>
           </Form>
 
-          <Form style={{top:170}}>
+          <Form style={{ top: 170 }}>
             <Picker
               mode="dropdown"
               iosHeader="Select Category"
-              iosIcon={<Icon name="arrow-dropdown-circle" style={{ color: "white", fontSize: 25}}/>}
-              style={{ width: 200, paddingLeft:4, borderBottomWidth: 1, borderLeftWidth:1, borderRightWidth:1, borderTopWidth:1, borderColor:"palevioletred", backgroundColor:"palevioletred"}}
+              iosIcon={<Icon name="arrow-dropdown-circle" style={{ color: "white", fontSize: 25 }} />}
+              style={{ width: 200, paddingLeft: 4, borderBottomWidth: 1, borderLeftWidth: 1, borderRightWidth: 1, borderTopWidth: 1, borderColor: "palevioletred", backgroundColor: "palevioletred" }}
               placeholder="Select Category"
-              placeholderStyle={{color: 'white', paddingLeft:4}}
-              selectedValue={this.state.category}
-              onValueChange={(label, value)=> this.onValueChange("feature_category", label)}
+              placeholderStyle={{ color: 'white', paddingLeft: 4 }}
+              selectedValue={this.state.features.category}
+              onValueChange={(label) => this.onChangeState("features", ["category", label])}
             >
               <Picker.Item label="Electronic Items" value="Electronic Items" />
               <Picker.Item label="Daily Items" value="Daily Items" />
@@ -374,25 +260,25 @@ export default class Lost extends React.Component {
             </Picker>
           </Form>
 
-          <Item regular style={{top: 180, height: 140}}>
-            <Input style={{marginTop:1}} placeholder='Additional Description:' onChangeText={text => this.onChangeDescription(text)}/>
+          <Item regular style={{ top: 180, height: 140 }}>
+            <Input style={{ marginTop: 1 }} placeholder='Additional Description:' onChangeText={val => this.onChangeState("description", val)} />
           </Item>
 
-          {/* <Button success style={{top: 210, width: 100, marginLeft: 270}} onPress={this.handlePress}>
+          {/* <Button success style={{top: 210, width: 100, marginLeft: 270}} onPress={this.submitForm}>
             <Text> Submit</Text>
           </Button>
 
 
           <Icon active name='camera' style={{marginTop: 170, marginLeft: 20, width: 60}} /> */}
 
-          <View style={{top:190, flex: 0.9, flexDirection:"column", justifyContent:'space-between'}}>
-            <View style={{width: 100, marginLeft: 275}}>
-            <Button success  onPress={this.handlePress}>
-              <Text> Submit</Text>
-            </Button>
+          <View style={{ top: 190, flex: 0.9, flexDirection: "column", justifyContent: 'space-between' }}>
+            <View style={{ width: 100, marginLeft: 275 }}>
+              <Button success onPress={this.submitForm}>
+                <Text> Submit</Text>
+              </Button>
             </View>
 
-            <View style={{width: 50, marginLeft: 5}}>
+            <View style={{ width: 50, marginLeft: 5 }}>
               {/* {!isCameraVisible &&<Button title="Show me Camera" onPress={this.showCameraView} />}
               {isCameraVisible &&
               this.props.navigation.navigate("CameraPage")} */}
@@ -404,17 +290,17 @@ export default class Lost extends React.Component {
 
         </View>
       </Container>
-    );
+    )
   }
 }
-  const styles = StyleSheet.create({
-    container: {
-      width: "90%",
-      top: 30,
-      marginTop: 30
-    },
-    content: {
-      width: "90%",
-      margin: 20
-    },
-  });
+const styles = StyleSheet.create({
+  container: {
+    width: "90%",
+    top: 30,
+    marginTop: 30
+  },
+  content: {
+    width: "90%",
+    margin: 20
+  },
+})

@@ -10,7 +10,6 @@ import {
   Body,
   Left,
   Right,
-  Icon,
   Form,
   Text
 } from "native-base";
@@ -32,8 +31,9 @@ const LOGIN_URL = IP_PORT + USERS + LOGIN
 const PICKUP_LOCATIONS_URL = IP_PORT + USERS + PICKUP_LOCATIONS
 
 export default class Login extends Component {
-  static token = null;
-  static name = null;
+  static token = ""
+  static name = ""
+  static pickupLocations = []
 
   constructor(props) {
     super(props);
@@ -41,11 +41,16 @@ export default class Login extends Component {
       username: "",
       password: "",
     };
-    this.pickupLocations = [];
   }
 
-  getPickUpLocations() {
-    return this.pickupLocations;
+  static getToken(){
+    return token;
+  }
+  static getName(){
+    return name;
+  }
+  static getPickUpLocations() {
+    return pickupLocations;
   }
 
   fetchPickUpLocations = async () => {
@@ -59,8 +64,8 @@ export default class Login extends Component {
       })
 
       if (response.status == 200) {
-        this.pickupLocations = await response.json()
-        console.log("pickup locations\n", this.pickupLocations)
+        pickupLocations = await response.json()
+        console.log("pickup locations\n", pickupLocations)
       } else {
         console.error(response)
       }

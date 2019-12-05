@@ -122,7 +122,7 @@ export default class Lost extends Component {
     if(this.data.hasOwnProperty("image")){
       formData.append("image",this.data["image"]);
     }
-    console.log(formData);
+    console.log("form\n", formData);
 
     // console.log(this.data);
     try {
