@@ -1,5 +1,5 @@
 import React from "react"
-import { View, Alert, StyleSheet } from "react-native"
+import { View, Alert, StyleSheet,ActivityIndicator } from "react-native"
 import {
   Button,
   Text,
@@ -39,6 +39,7 @@ export default class Lost extends React.Component {
       date_time: undefined,
       image: undefined,
       pickup_address: undefined,
+      animating: false,
     }
 
     this.isCameraVisible = false
@@ -64,6 +65,9 @@ export default class Lost extends React.Component {
   }
 
   submitForm = async () => {
+    this.setState({
+        animating: true
+      });
     var formData = new FormData()
     formData.append("is_lost", "") // is_lost is empty string <=> false for found items
 
@@ -91,9 +95,15 @@ export default class Lost extends React.Component {
       if (response.status == 201) {
         const result = await response.json()
         console.log('Success:', result)
+        this.setState({
+        animating: false
+        });
         this.props.navigation.navigate("HomePage")
       } else {
-        Alert.alert("Failed to add lost item.")
+        Alert.alert("Failed to add found item.")
+        this.setState({
+        animating: false
+        });
         // console.error(response)
       }
     } catch (error) {
@@ -146,6 +156,12 @@ export default class Lost extends React.Component {
           </Body>
           <Right />
         </Header>
+
+        {this.state.animating &&
+            <View style={styles.loading}>
+              <ActivityIndicator size='large' />
+            </View>
+        }
 
         <View style={styles.content}>
 
@@ -287,6 +303,10 @@ export default class Lost extends React.Component {
             </View>
           </View>
 
+          {/* <ActivityIndicator
+          animating={this.state.animating}
+          style={[styles.loading, {height: 80}]}
+          size="large" /> */}
 
         </View>
       </Container>
@@ -303,4 +323,14 @@ const styles = StyleSheet.create({
     width: "90%",
     margin: 20
   },
+  loading: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(52, 52, 52, 0.3)'
+  }
 })

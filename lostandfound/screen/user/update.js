@@ -25,7 +25,8 @@ import Login from "../user/login.js"
 import {
   IP_PORT,
   USERS,
-  UPDATE
+  UPDATE,
+  GET_ORG
 } from '../../const.js';
 
 const UPDATE_URL = IP_PORT + USERS + UPDATE
@@ -41,6 +42,7 @@ export default class Update extends Component {
       username: undefined,
       email: undefined,
       org: undefined,
+      userOrg: [],
       phone_number: undefined,
     };
   }
@@ -49,9 +51,47 @@ export default class Update extends Component {
     this.setState({ [name]: value })
   }
 
+  onChangeOrg(value: string) {
+      console.log("org state")
+      this.setState({org: value});
+    }
+
   navigateToLogin = () => {
-    this.props.navigation.navigate('Login');
+    this.props.navigation.navigate('LoginPage');
   }
+
+  fetchOrg = async() => {
+    
+      try {
+        const response = await fetch(GET_ORG, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+        })
+        let content = await response.json();
+        console.log(content)
+        if (response.status == 200){
+          for (index in content){
+            console.log(index)
+            let arr = this.state.userOrg;
+            arr.push(content[index].orgname);
+            this.setState({userOrg: arr});
+            //this.pickUpLocArr.push(content[index].office)
+          }
+          orgs = this.state.userOrg;
+          // TODO: empty location
+          console.log("show orgs");
+          console.log(orgs)
+          // this.pickUpLocArr = content;
+        }
+        else{
+          console.error("Something wrong!")
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
 
   fetchUserData = async () => {
     try {
@@ -69,7 +109,7 @@ export default class Update extends Component {
           username: content.username,
           email: content.email,
           phone_number: content.phone_number,
-          org: content.org
+          org: content.org,
         });
       } else {
         console.error(response)
@@ -83,6 +123,7 @@ export default class Update extends Component {
     name = Login.getName();
     user_url = UPDATE_URL + name;
     this.fetchUserData();
+    this.fetchOrg();
   }
 
   postUpdate = async () => {
@@ -95,7 +136,6 @@ export default class Update extends Component {
         },
         body: JSON.stringify(this.state),
       })
-
       if (response.status != 200) {
         Alert.alert("Failed to update user profile.")
         console.error(response)
@@ -108,6 +148,9 @@ export default class Update extends Component {
   }
 
   render() {
+    let orgItems = this.state.userOrg.map( (s) => {
+      return <Picker.Item key={1} value={s} label={s} />
+    });
     return (
       <Container style={styles.container}>
 
@@ -147,7 +190,7 @@ export default class Update extends Component {
               />
             </Item>
 
-            <Item picker>
+            {/* <Item picker>
               <Picker
                 mode="dropdown"
                 iosIcon={<Icon name="ios-arrow-down" />}
@@ -163,6 +206,21 @@ export default class Update extends Component {
                 <Item label="Physics" value="Physics" />
                 <Item label="ECE" value="ECE" />
                 <Item label="CS" value="CS" />
+              </Picker>
+            </Item> */}
+
+            <Item picker>
+              <Picker
+                mode="dropdown"
+                iosIcon={<Icon name="ios-arrow-down" />}
+                style={{ width: undefined,marginTop: 30, }}
+                placeholder="Select your Organization"
+                placeholderStyle={{ color: "#bfc6ea" }}
+                placeholderIconColor="#007aff"
+                selectedValue={this.state.org}
+                onValueChange={(label, value)=> this.onChangeOrg(label)}
+              >
+                {orgItems}
               </Picker>
             </Item>
 

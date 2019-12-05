@@ -38,7 +38,6 @@ const SIGNON_URL = IP_PORT + USERS + SIGNON
 //   password: "asdfg"};
 
 export default class Signon extends Component {
-
    constructor(props) {
       super(props);
       this.state = {
@@ -100,7 +99,6 @@ export default class Signon extends Component {
         let content = await response.json();
         console.log(content)
         if (response.status == 200){
-          var orgs;
           for (index in content){
             console.log(index)
             let arr = this.state.userOrg;
@@ -108,9 +106,10 @@ export default class Signon extends Component {
             this.setState({userOrg: arr});
             //this.pickUpLocArr.push(content[index].office)
           }
+          orgs = this.state.userOrg;
           // TODO: empty location
           console.log("show orgs");
-          console.log(this.state.userOrg)
+          console.log(orgs)
           // this.pickUpLocArr = content;
         }
         else{

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet,ActivityIndicator } from "react-native";
 import {createStackNavigator} from "react-navigation-stack";
 import { TextInput } from 'react-native';
 import {
@@ -37,7 +37,8 @@ export default class Lost extends Component {
       size: undefined,
       category: undefined,
       image: undefined,
-      isCameraVisiable: false
+      isCameraVisiable: false,
+      animating: false,
     };
 
     this.data = {
@@ -107,6 +108,9 @@ export default class Lost extends Component {
   }
 
   handlePress = async () => {
+    this.setState({
+        animating: true
+      });
     var formData = new FormData();
     formData.append("is_lost",this.data["is_lost"]);
     if(this.data.hasOwnProperty("date_time")){
@@ -136,6 +140,9 @@ export default class Lost extends Component {
     })
     const result = await response.json();
     console.log('Success:', JSON.stringify(result));
+    this.setState({
+        animating: false
+        });
     this.props.navigation.navigate("HomePage");
   } catch (error) {
     console.error('Error:', error);
@@ -169,6 +176,12 @@ export default class Lost extends Component {
           </Body>
           <Right />
         </Header>
+
+        {this.state.animating &&
+            <View style={styles.loading}>
+              <ActivityIndicator size='large' />
+            </View>
+        }
 
         <View style={styles.content}>
           <Item style={{top:10}}>
@@ -295,4 +308,14 @@ export default class Lost extends Component {
       width: "90%",
       margin: 20
     },
+    loading: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(52, 52, 52, 0.3)'
+  }
   });
